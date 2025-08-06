@@ -136,3 +136,5 @@ export const [AuthProvider, useAuthStore] = createContextHook(() => {
     updateUser,
   };
 });
+
+export const useAuth = useAuthStore;
