@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import { useTheme } from '@/hooks/use-theme';
 import { useSubscription } from '@/hooks/use-subscription-store';
 import { ExternalLink } from 'lucide-react-native';
@@ -12,12 +12,16 @@ export function AdBanner({ style }: AdBannerProps) {
   const { colors } = useTheme();
   const { shouldShowBannerAd } = useSubscription();
 
-  if (!shouldShowBannerAd()) {
+  // AdMob is not fully supported on web, so we provide a fallback
+  if (Platform.OS === 'web' || !shouldShowBannerAd()) {
     return null;
   }
 
+  // TODO: Replace with actual AdMob Banner component and ID
+  // For development, use test ID: ca-app-pub-3940256099942544/6300978111
+  // Production ID placeholder: [INSERT ACTUAL BANNER AD UNIT ID HERE]
   return (
-    <View style={[styles.container, { backgroundColor: colors.card }, style]}>
+    <View style={[styles.container, { backgroundColor: colors.card }, style]} testID="ad-banner">
       <TouchableOpacity style={styles.adContent}>
         <ExternalLink size={16} color={colors.text.secondary} />
         <Text style={[styles.adText, { color: colors.text.secondary }]}>

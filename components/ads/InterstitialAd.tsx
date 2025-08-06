@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Modal, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Modal, TouchableOpacity, Dimensions, Platform } from 'react-native';
 import { useTheme } from '@/hooks/use-theme';
 import { useSubscription } from '@/hooks/use-subscription-store';
 import { X, ExternalLink } from 'lucide-react-native';
@@ -39,6 +39,14 @@ export function InterstitialAd({ visible, onClose }: InterstitialAdProps) {
     }
   };
 
+  // AdMob is not fully supported on web, so we provide a fallback
+  if (Platform.OS === 'web') {
+    return null;
+  }
+
+  // TODO: Replace with actual AdMob Interstitial component and ID
+  // For development, use test ID: ca-app-pub-3940256099942544/1033173712
+  // Production ID placeholder: [INSERT ACTUAL INTERSTITIAL AD UNIT ID HERE]
   return (
     <Modal
       visible={visible}

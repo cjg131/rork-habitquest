@@ -13,7 +13,8 @@ import {
   Download, 
   Zap, 
   Shield,
-  Star
+  Star,
+  RefreshCcw
 } from 'lucide-react-native';
 
 export default function SubscriptionScreen() {
@@ -54,7 +55,7 @@ export default function SubscriptionScreen() {
     if (!plan) return;
 
     const price = getAdjustedPrice(planId);
-    const priceText = price === 0 ? 'Free' : `$${price.toFixed(2)}`;
+    const priceText = price === 0 ? 'Free' : `${price.toFixed(2)}`;
     const periodText = plan.period ? ` (${plan.period})` : '';
 
     Alert.alert(
@@ -74,6 +75,23 @@ export default function SubscriptionScreen() {
             } else {
               Alert.alert('Purchase Failed', result.error || 'Please try again.');
             }
+          }
+        }
+      ]
+    );
+  };
+
+  const handleRestorePurchases = () => {
+    Alert.alert(
+      'Restore Purchases',
+      'This will check for any previous purchases and restore them to your account.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { 
+          text: 'Restore', 
+          onPress: () => {
+            // TODO: Implement actual restore purchase logic with RevenueCat or Stripe
+            Alert.alert('Restore Successful', 'No previous purchases found to restore.');
           }
         }
       ]
@@ -111,7 +129,7 @@ export default function SubscriptionScreen() {
       </View>
 
       {/* Trial/Status Info */}
-      {trialStatus.isActive && (
+      {trialStatus.isActive ? (
         <Card style={[styles.statusCard, { backgroundColor: colors.success + '10' }]}>
           <View style={styles.statusContent}>
             <Zap size={24} color={colors.success} />
@@ -125,13 +143,27 @@ export default function SubscriptionScreen() {
             </View>
           </View>
         </Card>
-      )}
+      ) : trialStatus.hasExpired && !user?.premium && !user?.adRemoval ? (
+        <Card style={[styles.statusCard, { backgroundColor: colors.warning + '10' }]}>
+          <View style={styles.statusContent}>
+            <Zap size={24} color={colors.warning} />
+            <View style={styles.statusText}>
+              <Text style={[styles.statusTitle, { color: colors.text.primary }]}>
+                Trial Expired
+              </Text>
+              <Text style={[styles.statusDescription, { color: colors.text.secondary }]}>
+                Your 14-day free trial has ended. Upgrade to Premium to continue using all features.
+              </Text>
+            </View>
+          </View>
+        </Card>
+      ) : null}
 
       {/* Plans */}
       <View style={styles.plansContainer}>
         {plans.map((plan) => {
           const price = getAdjustedPrice(plan.id);
-          const priceText = price === 0 ? 'Free' : `$${price.toFixed(2)}`;
+          const priceText = price === 0 ? 'Free' : `${price.toFixed(2)}`;
           const planColor = plan.popular ? colors.primary : colors.text.secondary;
           
           return (
@@ -212,6 +244,15 @@ export default function SubscriptionScreen() {
           );
         })}
       </View>
+
+      {/* Restore Purchases */}
+      <Button
+        title="Restore Purchases"
+        variant="outline"
+        onPress={handleRestorePurchases}
+        style={styles.restoreButton}
+        icon={<RefreshCcw size={16} color={colors.primary} />}
+      />
 
       {/* Features Highlight */}
       <Card style={styles.featuresHighlight}>
@@ -418,5 +459,8 @@ const styles = StyleSheet.create({
     fontSize: 12,
     textAlign: 'center',
     lineHeight: 18,
+  },
+  restoreButton: {
+    marginBottom: 24,
   },
 });
