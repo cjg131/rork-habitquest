@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, TextInput } from 'react-native';
 import { Stack } from 'expo-router';
 import { useAuth } from '@/hooks/use-auth-store';
+import { useTheme } from '@/hooks/use-theme';
 import * as SecureStore from 'expo-secure-store';
 
 const AccountDeletionScreen = () => {
   const { user } = useAuth();
+  const { colors } = useTheme();
   const [gracePeriod, setGracePeriod] = useState('60');
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -50,28 +52,29 @@ const AccountDeletionScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <Stack.Screen options={{ title: 'Account Deletion' }} />
-      <Text style={styles.title}>Delete Account</Text>
-      <Text style={styles.description}>
-        Once you delete your account, it will be permanently removed after the grace period. You can log in before the end of the grace period to recover your account.
+      <Text style={[styles.title, { color: colors.text.primary }]}>Delete Account</Text>
+      <Text style={[styles.description, { color: colors.text.secondary }]}>
+        Once you delete your account, it will be permanently removed after the grace period. You can log in before the end of the grace period to recover your account. You will receive reminder emails every 7 days until deletion is permanent.
       </Text>
       <TextInput
-        style={styles.input}
+        style={[styles.input, { borderColor: colors.border, color: colors.text.primary }]}
         value={gracePeriod}
         onChangeText={setGracePeriod}
         keyboardType="numeric"
         placeholder="Enter grace period in days"
+        placeholderTextColor={colors.text.tertiary}
       />
       <TouchableOpacity
-        style={[styles.button, isDeleting && styles.buttonDisabled]}
+        style={[styles.button, { backgroundColor: colors.error }, isDeleting && styles.buttonDisabled]}
         onPress={handleDeleteAccount}
         disabled={isDeleting}
       >
         <Text style={styles.buttonText}>Schedule Deletion</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        style={[styles.button, styles.cancelButton]}
+        style={[styles.button, styles.cancelButton, { backgroundColor: colors.primary }]}
         onPress={handleCancelDeletion}
       >
         <Text style={styles.buttonText}>Cancel Deletion</Text>
@@ -84,7 +87,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#f5f5f5',
   },
   title: {
     fontSize: 24,
@@ -94,28 +96,24 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 16,
     marginBottom: 24,
-    color: '#666',
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
     padding: 12,
     borderRadius: 8,
     marginBottom: 16,
     fontSize: 16,
   },
   button: {
-    backgroundColor: '#FF3B30',
     padding: 16,
     borderRadius: 8,
     alignItems: 'center',
     marginBottom: 16,
   },
   buttonDisabled: {
-    backgroundColor: '#ccc',
+    opacity: 0.5,
   },
   cancelButton: {
-    backgroundColor: '#007AFF',
   },
   buttonText: {
     color: '#fff',

@@ -39,9 +39,9 @@ export default function SettingsScreen() {
   const handleShareApp = async () => {
     try {
       const result = await RNShare.share({
-        message: 'Check out this amazing habit and task tracker app! It helps you stay productive and build better habits. Download it now!',
-        title: 'Habit & Task Tracker',
-        url: Platform.OS === 'ios' ? 'https://apps.apple.com/app/habit-tracker' : 'https://play.google.com/store/apps/details?id=com.habittracker',
+        message: 'Check out Stride! It helps you stay productive and build better habits. Download it now!',
+        title: 'Stride - Habit & Task Tracker',
+        url: Platform.OS === 'ios' ? 'https://apps.apple.com/app/stride' : 'https://play.google.com/store/apps/details?id=com.stride',
       });
       
       if (result.action === RNShare.sharedAction) {

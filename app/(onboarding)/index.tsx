@@ -3,11 +3,10 @@ import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Platform } from
 import { useRouter } from 'expo-router';
 import { useTheme } from '@/hooks/use-theme';
 import { useOnboarding } from '@/hooks/use-onboarding-store';
-import { colors } from '@/constants/colors';
 import { StatusBar } from 'expo-status-bar';
 
 export default function OnboardingScreen() {
-  const theme = useTheme();
+  const { colors, colorScheme } = useTheme();
   const router = useRouter();
   const { updateOnboardingState, completeOnboarding } = useOnboarding();
   const [step, setStep] = useState(1);
@@ -103,20 +102,20 @@ export default function OnboardingScreen() {
       flex: 1,
       padding: 20,
       justifyContent: 'center',
-      backgroundColor: theme.colors.background
+      backgroundColor: colors.background
     },
     title: {
       fontSize: 28,
       fontWeight: 'bold',
       textAlign: 'center',
       marginBottom: 10,
-      color: theme.colors.text.primary
+      color: colors.text.primary
     },
     subtitle: {
       fontSize: 16,
       textAlign: 'center',
       marginBottom: 40,
-      color: theme.colors.text.secondary
+      color: colors.text.secondary
     },
     questionContainer: {
       marginBottom: 30
@@ -126,24 +125,24 @@ export default function OnboardingScreen() {
       fontWeight: '600',
       marginBottom: 20,
       textAlign: 'center',
-      color: theme.colors.text.primary
+      color: colors.text.primary
     },
     option: {
       padding: 15,
       borderRadius: 10,
       marginBottom: 10,
       alignItems: 'center',
-      backgroundColor: theme.colors.card
+      backgroundColor: colors.card
     },
     selectedOption: {
-      backgroundColor: theme.colors.primary
+      backgroundColor: colors.primary
     },
     optionText: {
       fontSize: 16,
-      color: theme.colors.text.primary
+      color: colors.text.primary
     },
     selectedOptionText: {
-      color: theme.colors.background,
+      color: colors.background,
       fontWeight: 'bold'
     },
     skipButton: {
@@ -153,7 +152,7 @@ export default function OnboardingScreen() {
     },
     skipButtonText: {
       fontSize: 16,
-      color: theme.colors.text.secondary
+      color: colors.text.secondary
     },
     progressContainer: {
       alignItems: 'center',
@@ -161,9 +160,9 @@ export default function OnboardingScreen() {
     },
     progressText: {
       fontSize: 14,
-      color: theme.colors.text.secondary
+      color: colors.text.secondary
     }
-  }), [theme]);
+  }), [colors]);
 
   return (
     <SafeAreaView style={dynamicStyles.container}>
