@@ -251,7 +251,7 @@ export default function SubscriptionScreen() {
         variant="outline"
         onPress={handleRestorePurchases}
         style={styles.restoreButton}
-        icon={<RefreshCcw size={16} color={colors.primary} />}
+        // icon prop not supported in Button component
       />
 
       {/* Features Highlight */}
