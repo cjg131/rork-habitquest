@@ -44,52 +44,52 @@ export default function OnboardingScreen() {
     switch (step) {
       case 1:
         return (
-          <View style={styles.questionContainer}>
-            <Text style={styles.question}>What do you want to track most?</Text>
+          <View style={dynamicStyles.questionContainer}>
+            <Text style={dynamicStyles.question}>What do you want to track most?</Text>
             {['Habits', 'Tasks', 'Pomodoro/Focus', 'All'].map(option => (
               <TouchableOpacity
                 key={option}
-                style={[styles.option, answers.track === option && styles.selectedOption]}
+                style={[dynamicStyles.option, answers.track === option && dynamicStyles.selectedOption]}
                 onPress={() => handleAnswer('track', option)}
               >
-                <Text style={[styles.optionText, answers.track === option && styles.selectedOptionText]}>{option}</Text>
+                <Text style={[dynamicStyles.optionText, answers.track === option && dynamicStyles.selectedOptionText]}>{option}</Text>
               </TouchableOpacity>
             ))}
           </View>
         );
       case 2:
         return (
-          <View style={styles.questionContainer}>
-            <Text style={styles.question}>How often do you want reminders?</Text>
+          <View style={dynamicStyles.questionContainer}>
+            <Text style={dynamicStyles.question}>How often do you want reminders?</Text>
             {['Multiple times a day', 'Daily', 'Weekly', 'Only for important things'].map(option => (
               <TouchableOpacity
                 key={option}
-                style={[styles.option, answers.reminders === option && styles.selectedOption]}
+                style={[dynamicStyles.option, answers.reminders === option && dynamicStyles.selectedOption]}
                 onPress={() => handleAnswer('reminders', option)}
               >
-                <Text style={[styles.optionText, answers.reminders === option && styles.selectedOptionText]}>{option}</Text>
+                <Text style={[dynamicStyles.optionText, answers.reminders === option && dynamicStyles.selectedOptionText]}>{option}</Text>
               </TouchableOpacity>
             ))}
           </View>
         );
       case 3:
         return (
-          <View style={styles.questionContainer}>
-            <Text style={styles.question}>What’s your main goal? (Optional)</Text>
+          <View style={dynamicStyles.questionContainer}>
+            <Text style={dynamicStyles.question}>What’s your main goal? (Optional)</Text>
             {['Productivity', 'Well-being', 'Health/Fitness', 'Custom'].map(option => (
               <TouchableOpacity
                 key={option}
-                style={[styles.option, answers.goal === option && styles.selectedOption]}
+                style={[dynamicStyles.option, answers.goal === option && dynamicStyles.selectedOption]}
                 onPress={() => handleAnswer('goal', option)}
               >
-                <Text style={[styles.optionText, answers.goal === option && styles.selectedOptionText]}>{option}</Text>
+                <Text style={[dynamicStyles.optionText, answers.goal === option && dynamicStyles.selectedOptionText]}>{option}</Text>
               </TouchableOpacity>
             ))}
             <TouchableOpacity
-              style={styles.skipButton}
+              style={dynamicStyles.skipButton}
               onPress={handleSkip}
             >
-              <Text style={styles.skipButtonText}>Skip</Text>
+              <Text style={dynamicStyles.skipButtonText}>Skip</Text>
             </TouchableOpacity>
           </View>
         );
