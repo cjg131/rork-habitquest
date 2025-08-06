@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Platform } from 'react-native';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
-import { useSubscription } from '@/hooks/use-subscription-store';
+import { useSubscriptionStore } from '@/hooks/use-subscription-store';
 import { useTasks } from '@/hooks/use-tasks-store';
 import { useHabitsStore } from '@/hooks/use-habits-store';
 import { useGamification } from '@/hooks/use-gamification-store';
 
 const ExportManager: React.FC = () => {
-  const { isFeatureUnlocked } = useSubscription();
+  const { isFeatureUnlocked } = useSubscriptionStore();
   const { tasks } = useTasks();
   const { habits } = useHabitsStore();
   const { badges } = useGamification();
