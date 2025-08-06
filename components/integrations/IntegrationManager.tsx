@@ -90,10 +90,10 @@ const IntegrationManager = () => {
             );
             return (
               <View key={habit.id} style={styles.habitItem}>
-                <Text style={styles.habitName}>{habit.name}</Text>
+                <Text style={styles.habitName}>{habit.title}</Text>
                 <Switch
-                  checked={isLinked}
-                  onChange={() => toggleHabitIntegration(habit.id, item.id)}
+                  value={isLinked}
+                  onValueChange={() => toggleHabitIntegration(habit.id, item.id)}
                   testId={`switch-${habit.id}-${item.id}`}
                 />
               </View>
