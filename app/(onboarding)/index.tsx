@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTheme } from '@/hooks/use-theme';
@@ -98,74 +98,82 @@ export default function OnboardingScreen() {
     }
   };
 
+  const dynamicStyles = useMemo(() => StyleSheet.create({
+    container: {
+      flex: 1,
+      padding: 20,
+      justifyContent: 'center',
+      backgroundColor: theme.colors.background
+    },
+    title: {
+      fontSize: 28,
+      fontWeight: 'bold',
+      textAlign: 'center',
+      marginBottom: 10,
+      color: theme.colors.text.primary
+    },
+    subtitle: {
+      fontSize: 16,
+      textAlign: 'center',
+      marginBottom: 40,
+      color: theme.colors.text.secondary
+    },
+    questionContainer: {
+      marginBottom: 30
+    },
+    question: {
+      fontSize: 20,
+      fontWeight: '600',
+      marginBottom: 20,
+      textAlign: 'center',
+      color: theme.colors.text.primary
+    },
+    option: {
+      padding: 15,
+      borderRadius: 10,
+      marginBottom: 10,
+      alignItems: 'center',
+      backgroundColor: theme.colors.card
+    },
+    selectedOption: {
+      backgroundColor: theme.colors.primary
+    },
+    optionText: {
+      fontSize: 16,
+      color: theme.colors.text.primary
+    },
+    selectedOptionText: {
+      color: theme.colors.background,
+      fontWeight: 'bold'
+    },
+    skipButton: {
+      padding: 10,
+      alignItems: 'center',
+      marginTop: 20
+    },
+    skipButtonText: {
+      fontSize: 16,
+      color: theme.colors.text.secondary
+    },
+    progressContainer: {
+      alignItems: 'center',
+      marginTop: 20
+    },
+    progressText: {
+      fontSize: 14,
+      color: theme.colors.text.secondary
+    }
+  }), [theme]);
+
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
+    <SafeAreaView style={dynamicStyles.container}>
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
-      <Text style={[styles.title, { color: theme.colors.primary }]}>Let’s Get Started</Text>
-      <Text style={[styles.subtitle, { color: theme.colors.secondary }]}>Answer a few questions to personalize your experience.</Text>
+      <Text style={dynamicStyles.title}>Let’s Get Started</Text>
+      <Text style={dynamicStyles.subtitle}>Answer a few questions to personalize your experience.</Text>
       {renderQuestion()}
-      <View style={styles.progressContainer}>
-        <Text style={[styles.progressText, { color: theme.colors.secondary }]}>Step {step} of 3</Text>
+      <View style={dynamicStyles.progressContainer}>
+        <Text style={dynamicStyles.progressText}>Step {step} of 3</Text>
       </View>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    justifyContent: 'center'
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 10
-  },
-  subtitle: {
-    fontSize: 16,
-    textAlign: 'center',
-    marginBottom: 40
-  },
-  questionContainer: {
-    marginBottom: 30
-  },
-  question: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginBottom: 20,
-    textAlign: 'center'
-  },
-  option: {
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 10,
-    alignItems: 'center'
-  },
-  selectedOption: {
-    backgroundColor: theme.colors.primary,
-  },
-  optionText: {
-    fontSize: 16,
-  },
-  selectedOptionText: {
-    color: theme.colors.background,
-    fontWeight: 'bold'
-  },
-  skipButton: {
-    padding: 10,
-    alignItems: 'center',
-    marginTop: 20
-  },
-  skipButtonText: {
-    fontSize: 16,
-  },
-  progressContainer: {
-    alignItems: 'center',
-    marginTop: 20
-  },
-  progressText: {
-    fontSize: 14,
-  }
-});
