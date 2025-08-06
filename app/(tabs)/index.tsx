@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet, View, Text, ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { useTheme } from '@/hooks/use-theme';
 import { useAuth } from '@/hooks/use-auth-store';
 import { useTasks } from '@/hooks/use-tasks-store';
@@ -12,7 +12,7 @@ import { HabitItem } from '@/components/habits/HabitItem';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Button } from '@/components/ui/Button';
 import { useRouter } from 'expo-router';
-import { Calendar, CheckCircle, Clock, Flame, ListTodo } from 'lucide-react-native';
+import { Calendar, CheckCircle, Clock, Flame, ListTodo, Undo2 } from 'lucide-react-native';
 import { Habit, CompletionRecord } from '@/types';
 
 export default function DashboardScreen() {
@@ -22,6 +22,8 @@ export default function DashboardScreen() {
   const { tasks, updateTask } = useTasks();
   const { habits, markHabitComplete, markHabitIncomplete } = useHabits();
   const { startSession } = usePomodoro();
+  const [frictionlessMode, setFrictionlessMode] = useState(false);
+  const [lastAction, setLastAction] = useState<{ type: string, id: string, previousState: boolean } | null>(null);
 
   if (!user) {
     return (
@@ -68,14 +70,31 @@ export default function DashboardScreen() {
   const longestStreak = habits.reduce((max, habit) => Math.max(max, habit.streak), 0);
 
   const handleToggleTask = (taskId: string, completed: boolean) => {
+    setLastAction({ type: 'task', id: taskId, previousState: !completed });
     updateTask(taskId, { completed });
   };
 
   const handleToggleHabit = (habitId: string, isCompleted: boolean) => {
+    setLastAction({ type: 'habit', id: habitId, previousState: isCompleted });
     if (isCompleted) {
       markHabitIncomplete(habitId);
     } else {
       markHabitComplete(habitId);
+    }
+  };
+
+  const handleUndo = () => {
+    if (lastAction) {
+      if (lastAction.type === 'task') {
+        updateTask(lastAction.id, { completed: lastAction.previousState });
+      } else if (lastAction.type === 'habit') {
+        if (lastAction.previousState) {
+          markHabitComplete(lastAction.id);
+        } else {
+          markHabitIncomplete(lastAction.id);
+        }
+      }
+      setLastAction(null);
     }
   };
 
@@ -95,6 +114,25 @@ export default function DashboardScreen() {
             day: 'numeric' 
           })}
         </Text>
+      </View>
+      <View style={styles.modeToggleContainer}>
+        <TouchableOpacity
+          style={[styles.modeToggle, frictionlessMode && styles.modeToggleActive, { backgroundColor: frictionlessMode ? colors.primary : colors.card }]}
+          onPress={() => setFrictionlessMode(!frictionlessMode)}
+        >
+          <Text style={[styles.modeToggleText, { color: frictionlessMode ? colors.background : colors.text.primary }]}>
+            Frictionless Mode {frictionlessMode ? 'ON' : 'OFF'}
+          </Text>
+        </TouchableOpacity>
+        {lastAction && (
+          <TouchableOpacity
+            style={[styles.undoButton, { backgroundColor: colors.card }]}
+            onPress={handleUndo}
+          >
+            <Undo2 size={16} color={colors.text.primary} />
+            <Text style={[styles.undoButtonText, { color: colors.text.primary }]}>Undo Last Action</Text>
+          </TouchableOpacity>
+        )}
       </View>
       
       <LevelProgress
@@ -268,5 +306,34 @@ const styles = StyleSheet.create({
   },
   focusButtonContainer: {
     marginTop: 8,
+  },
+  modeToggleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  modeToggle: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+  },
+  modeToggleActive: {
+    // No additional styles needed as backgroundColor is set dynamically
+  },
+  modeToggleText: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  undoButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+  },
+  undoButtonText: {
+    fontSize: 14,
+    marginLeft: 8,
   },
 });

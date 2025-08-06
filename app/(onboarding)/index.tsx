@@ -1,24 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Platform } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTheme } from '@/hooks/use-theme';
-import { OnboardingStep } from '@/components/onboarding/OnboardingStep';
-import { TrackingPreferences } from '@/components/onboarding/TrackingPreferences';
-import { ReminderPreferences } from '@/components/onboarding/ReminderPreferences';
-import { StoragePreferences } from '@/components/onboarding/StoragePreferences';
 import { useOnboarding } from '@/hooks/use-onboarding-store';
+import { COLORS } from '@/constants/colors';
 import { StatusBar } from 'expo-status-bar';
 
 export default function OnboardingScreen() {
   const { colors } = useTheme();
   const router = useRouter();
-  const { state, updateOnboardingState, completeOnboarding } = useOnboarding();
-  const [step, setStep] = useState(0);
+  const { updateOnboardingState, completeOnboarding } = useOnboarding();
+  const [step, setStep] = useState(1);
+  const [answers, setAnswers] = useState({
+    track: '',
+    reminders: '',
+    goal: ''
+  });
 
-  const handleNext = () => {
-    if (step < 2) {
+  const handleAnswer = (question: string, answer: string) => {
+    setAnswers(prev => ({ ...prev, [question]: answer }));
+    if (step < 3) {
       setStep(step + 1);
     } else {
+      updateOnboardingState({ 
+        trackHabits: answer === 'Habits' || answer === 'All',
+        trackTasks: answer === 'Tasks' || answer === 'All',
+        trackPomodoro: answer === 'Pomodoro/Focus' || answer === 'All',
+        reminderFrequency: answers.reminders || answer,
+        goal: answers.goal || answer
+      });
       completeOnboarding().then(() => {
         router.replace('/(tabs)');
       });
@@ -31,57 +41,58 @@ export default function OnboardingScreen() {
     });
   };
 
-  const renderStep = () => {
+  const renderQuestion = () => {
     switch (step) {
-      case 0:
-        return (
-          <OnboardingStep
-            title="What would you like to track?"
-            description="Choose what you want to focus on. You can change this later in settings."
-            content={
-              <TrackingPreferences
-                trackHabits={state.trackHabits}
-                trackTasks={state.trackTasks}
-                trackPomodoro={state.trackPomodoro}
-                onToggleHabits={(value) => updateOnboardingState({ trackHabits: value })}
-                onToggleTasks={(value) => updateOnboardingState({ trackTasks: value })}
-                onTogglePomodoro={(value) => updateOnboardingState({ trackPomodoro: value })}
-              />
-            }
-            onNext={handleNext}
-            onSkip={handleSkip}
-          />
-        );
       case 1:
         return (
-          <OnboardingStep
-            title="How often would you like reminders?"
-            description="We'll help you stay on track with notifications."
-            content={
-              <ReminderPreferences
-                reminderFrequency={state.reminderFrequency}
-                onSelectFrequency={(frequency) => updateOnboardingState({ reminderFrequency: frequency })}
-              />
-            }
-            onNext={handleNext}
-            onSkip={handleSkip}
-          />
+          <View style={styles.questionContainer}>
+            <Text style={styles.question}>What do you want to track most?</Text>
+            {['Habits', 'Tasks', 'Pomodoro/Focus', 'All'].map(option => (
+              <TouchableOpacity
+                key={option}
+                style={[styles.option, answers.track === option && styles.selectedOption]}
+                onPress={() => handleAnswer('track', option)}
+              >
+                <Text style={[styles.optionText, answers.track === option && styles.selectedOptionText]}>{option}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
         );
       case 2:
         return (
-          <OnboardingStep
-            title="How would you like to store your data?"
-            description="Choose where to keep your habits and tasks."
-            content={
-              <StoragePreferences
-                storageMethod={state.storageMethod}
-                onSelectStorage={(method) => updateOnboardingState({ storageMethod: method })}
-              />
-            }
-            onNext={handleNext}
-            onSkip={handleSkip}
-            nextLabel="Get Started"
-          />
+          <View style={styles.questionContainer}>
+            <Text style={styles.question}>How often do you want reminders?</Text>
+            {['Multiple times a day', 'Daily', 'Weekly', 'Only for important things'].map(option => (
+              <TouchableOpacity
+                key={option}
+                style={[styles.option, answers.reminders === option && styles.selectedOption]}
+                onPress={() => handleAnswer('reminders', option)}
+              >
+                <Text style={[styles.optionText, answers.reminders === option && styles.selectedOptionText]}>{option}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        );
+      case 3:
+        return (
+          <View style={styles.questionContainer}>
+            <Text style={styles.question}>What’s your main goal? (Optional)</Text>
+            {['Productivity', 'Well-being', 'Health/Fitness', 'Custom'].map(option => (
+              <TouchableOpacity
+                key={option}
+                style={[styles.option, answers.goal === option && styles.selectedOption]}
+                onPress={() => handleAnswer('goal', option)}
+              >
+                <Text style={[styles.optionText, answers.goal === option && styles.selectedOptionText]}>{option}</Text>
+              </TouchableOpacity>
+            ))}
+            <TouchableOpacity
+              style={styles.skipButton}
+              onPress={handleSkip}
+            >
+              <Text style={styles.skipButtonText}>Skip</Text>
+            </TouchableOpacity>
+          </View>
         );
       default:
         return null;
@@ -89,15 +100,80 @@ export default function OnboardingScreen() {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
-      {renderStep()}
-    </View>
+      <Text style={styles.title}>Let’s Get Started</Text>
+      <Text style={styles.subtitle}>Answer a few questions to personalize your experience.</Text>
+      {renderQuestion()}
+      <View style={styles.progressContainer}>
+        <Text style={styles.progressText}>Step {step} of 3</Text>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 20,
+    justifyContent: 'center'
   },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: COLORS.primary,
+    textAlign: 'center',
+    marginBottom: 10
+  },
+  subtitle: {
+    fontSize: 16,
+    color: COLORS.textSecondary,
+    textAlign: 'center',
+    marginBottom: 40
+  },
+  questionContainer: {
+    marginBottom: 30
+  },
+  question: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: COLORS.textPrimary,
+    marginBottom: 20,
+    textAlign: 'center'
+  },
+  option: {
+    padding: 15,
+    backgroundColor: COLORS.cardBackground,
+    borderRadius: 10,
+    marginBottom: 10,
+    alignItems: 'center'
+  },
+  selectedOption: {
+    backgroundColor: COLORS.primary,
+  },
+  optionText: {
+    fontSize: 16,
+    color: COLORS.textPrimary
+  },
+  selectedOptionText: {
+    color: COLORS.background,
+    fontWeight: 'bold'
+  },
+  skipButton: {
+    padding: 10,
+    alignItems: 'center',
+    marginTop: 20
+  },
+  skipButtonText: {
+    fontSize: 16,
+    color: COLORS.textSecondary
+  },
+  progressContainer: {
+    alignItems: 'center',
+    marginTop: 20
+  },
+  progressText: {
+    fontSize: 14,
+    color: COLORS.textSecondary
+  }
 });
