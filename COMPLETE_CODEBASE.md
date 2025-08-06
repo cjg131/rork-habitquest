@@ -6,13 +6,35 @@
 │   ├── (auth)/            # Authentication screens
 │   ├── (onboarding)/      # Onboarding flow
 │   ├── (tabs)/            # Main tab navigation
+│   │   ├── index.tsx      # Dashboard screen
+│   │   ├── habits.tsx     # Habits management screen
+│   │   ├── tasks.tsx      # Tasks management screen
+│   │   ├── pomodoro.tsx   # Pomodoro timer screen
+│   │   ├── settings.tsx   # Settings screen
+│   │   ├── calendar.tsx   # Calendar view screen
+│   │   ├── subscription.tsx # Subscription management screen
+│   │   ├── account-deletion.tsx # Account deletion screen
+│   │   └── analytics.tsx  # Analytics and statistics screen
 │   └── modal.tsx          # Modal screens
 ├── backend/               # Backend API with tRPC
+│   ├── hono.ts            # Backend server setup with Hono
+│   └── trpc/              # tRPC setup and routes
 ├── components/            # Reusable UI components
-├── hooks/                 # Custom React hooks
-├── constants/             # App constants
+│   ├── ads/               # Advertisement components
+│   ├── auth/              # Authentication components
+│   ├── data/              # Data export/import components
+│   ├── dashboard/         # Dashboard UI components
+│   ├── habits/            # Habit tracking components
+│   ├── integrations/      # Integration management for premium users
+│   ├── offline/           # Offline mode components
+│   ├── onboarding/        # Onboarding UI components
+│   ├── pomodoro/          # Pomodoro timer components
+│   ├── tasks/             # Task management components
+│   └── ui/                # Generic UI components
+├── hooks/                 # Custom React hooks for state management
+├── constants/             # App constants like colors
 ├── types/                 # TypeScript types
-└── assets/               # Images and static assets
+└── assets/                # Images and static assets
 ```
 
 ## Key Files
@@ -257,10 +279,10 @@ export default function TasksScreen() {
         />
         
         <TouchableOpacity
-          style={[
+          style=[
             styles.addButton,
             { backgroundColor: colors.primary }
-          ]}
+          ]
           onPress={() => router.push('/modal?type=task')}
           testID="add-task-button"
         >
@@ -305,10 +327,10 @@ export default function TasksScreen() {
               showCrossedOut={settings.completedItemsDisplay === 'crossedOut' && activeTab === 'active'}
             />
           )}
-          contentContainerStyle={[
+          contentContainerStyle=[
             styles.listContent,
             { backgroundColor: colors.card }
-          ]}
+          ]
         />
       ) : (
         <EmptyState
@@ -749,21 +771,24 @@ export interface AppSettings {
 ## Key Features
 
 - **Task Management**: Create, edit, delete tasks with priorities and due dates
-- **Habit Tracking**: Daily, weekly, and custom frequency habits
-- **Pomodoro Timer**: Customizable work/break intervals
-- **Gamification**: XP system, levels, achievements
-- **Calendar Integration**: View tasks and habits in calendar format
-- **Premium Features**: Ad-free experience, data export, advanced analytics
-- **Cross-Platform**: iOS, Android, and Web support
+- **Habit Tracking**: Daily, weekly, and custom frequency habits with streak tracking
+- **Pomodoro Timer**: Customizable work/break intervals for focused productivity
+- **Gamification**: XP system, levels, and achievements to motivate users
+- **Calendar Integration**: View tasks and habits in day/week/month calendar format
+- **Premium Features**: Ad-free experience, data export/import, advanced analytics, and integrations
+- **Offline Sync**: Full offline mode with queued changes that sync when online
+- **Account Deletion**: Customizable grace period for account deletion with recovery option
+- **Cross-Platform**: iOS, Android, and Web support with React Native Web compatibility
 
 ## Tech Stack
 
-- React Native + Expo
-- TypeScript
-- Expo Router (file-based routing)
-- tRPC + Hono (backend)
-- React Query (server state)
-- AsyncStorage (local persistence)
-- Lucide React Native (icons)
+- **React Native + Expo**: Cross-platform mobile app development framework
+- **TypeScript**: Ensures type safety across the codebase
+- **Expo Router**: File-based routing for navigation
+- **tRPC + Hono**: Type-safe API communication between frontend and backend
+- **React Query**: Manages server state and caching
+- **AsyncStorage**: Local persistence for offline functionality
+- **Lucide React Native**: Icon library for consistent UI elements
+- **Custom Hooks with Context**: State management using `@nkzw/create-context-hook`
 
-This is a comprehensive habit tracking and productivity app with modern mobile UX/UI patterns.
+This is a comprehensive habit tracking and productivity app with modern mobile UX/UI patterns, designed with a clean, Apple-style visual polish including rounded corners, soft gradients, and smooth transitions.
