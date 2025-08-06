@@ -36,7 +36,7 @@ const AnalyticsScreen: React.FC = () => {
   const { habits } = useHabits();
   const { badges } = useGamification();
   const subscription = useSubscriptionStore();
-  const isPremium = subscription.isPremium;
+  const isPremium = subscription.isFeatureUnlocked('unlimited-tasks');
   const [exporting, setExporting] = useState(false);
 
   const completedTasks = tasks.filter(task => task.completed).length;
@@ -57,7 +57,7 @@ const AnalyticsScreen: React.FC = () => {
   ];
 
   const handleExportAnalytics = async () => {
-    if (!subscription.isPremium) {
+    if (!subscription.isFeatureUnlocked('data-export')) {
       Alert.alert('Premium Feature', 'Exporting analytics data is available for Premium users only. Upgrade to unlock this feature.');
       return;
     }
@@ -139,10 +139,10 @@ const AnalyticsScreen: React.FC = () => {
           title="Export Analytics"
           leftIcon={<Download size={20} color="#fff" />}
           onPress={handleExportAnalytics}
-          disabled={exporting || !subscription.isPremium}
-          style={[styles.exportButton, !subscription.isPremium && styles.disabledButton]}
+          disabled={exporting || !subscription.isFeatureUnlocked('data-export')}
+          style={[styles.exportButton, !subscription.isFeatureUnlocked('data-export') && styles.disabledButton]}
         />
-        {!subscription.isPremium && (
+        {!subscription.isFeatureUnlocked('data-export') && (
           <Text style={[styles.premiumNotice, { color: colors.text.secondary }]}>
             Export feature available for Premium users only
           </Text>
