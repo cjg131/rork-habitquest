@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/Button';
 import { Switch } from '@/components/ui/Switch';
 import { X, Save, Trash2, Calendar } from 'lucide-react-native';
 import type { Habit, Task, Frequency } from '@/types';
-// import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function ModalScreen() {
   const { colors } = useTheme();
@@ -34,6 +34,7 @@ export default function ModalScreen() {
   const [priority, setPriority] = useState<'low' | 'medium' | 'high'>('medium');
   const [dueDate, setDueDate] = useState<Date | undefined>(undefined);
   const [dueDateText, setDueDateText] = useState<string>('');
+  const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   
   // Pomodoro settings state
   const [workDuration, setWorkDuration] = useState<string>('25');
@@ -391,25 +392,45 @@ export default function ModalScreen() {
                 </View>
               </View>
               
-              <Input
-                label="Due Date (Optional)"
-                placeholder="YYYY-MM-DD"
-                value={dueDateText}
-                onChangeText={(text) => {
-                  setDueDateText(text);
-                  // Try to parse the date
-                  if (text.match(/^\d{4}-\d{2}-\d{2}$/)) {
-                    const parsedDate = new Date(text);
-                    if (!isNaN(parsedDate.getTime())) {
-                      setDueDate(parsedDate);
+              <TouchableOpacity
+                style={[styles.datePickerButton, { borderColor: colors.border, backgroundColor: colors.card }]}
+                onPress={() => setShowDatePicker(true)}
+              >
+                <Calendar size={20} color={colors.text.secondary} style={styles.dateIcon} />
+                <View style={styles.dateContent}>
+                  <Text style={[styles.dateLabel, { color: colors.text.primary }]}>Due Date (Optional)</Text>
+                  <Text style={[styles.dateValue, { color: dueDate ? colors.text.primary : colors.text.secondary }]}>
+                    {dueDate ? dueDate.toLocaleDateString() : 'Select date'}
+                  </Text>
+                </View>
+                {dueDate && (
+                  <TouchableOpacity
+                    onPress={() => {
+                      setDueDate(undefined);
+                      setDueDateText('');
+                    }}
+                    style={styles.clearDateButton}
+                  >
+                    <X size={16} color={colors.text.secondary} />
+                  </TouchableOpacity>
+                )}
+              </TouchableOpacity>
+              
+              {showDatePicker && (
+                <DateTimePicker
+                  value={dueDate || new Date()}
+                  mode="date"
+                  display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                  onChange={(event, selectedDate) => {
+                    setShowDatePicker(Platform.OS === 'ios');
+                    if (selectedDate) {
+                      setDueDate(selectedDate);
+                      setDueDateText(selectedDate.toISOString().split('T')[0]);
                     }
-                  } else if (text === '') {
-                    setDueDate(undefined);
-                  }
-                }}
-                leftIcon={<Calendar size={20} color={colors.text.secondary} />}
-                containerStyle={styles.inputContainer}
-              />
+                  }}
+                  minimumDate={new Date()}
+                />
+              )}
             </>
           )}
           
@@ -524,5 +545,29 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 16,
   },
-
+  datePickerButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    borderRadius: 12,
+    borderWidth: 1,
+    marginBottom: 16,
+  },
+  dateIcon: {
+    marginRight: 12,
+  },
+  dateContent: {
+    flex: 1,
+  },
+  dateLabel: {
+    fontSize: 14,
+    fontWeight: '500',
+    marginBottom: 2,
+  },
+  dateValue: {
+    fontSize: 16,
+  },
+  clearDateButton: {
+    padding: 4,
+  },
 });

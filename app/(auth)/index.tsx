@@ -32,14 +32,22 @@ export default function AuthScreen() {
     return await signUp(email, password, name);
   };
 
-  const handleGoogleSignIn = () => {
-    // In a real app, this would integrate with Google Sign-In
-    console.log('Google Sign In pressed');
+  const handleGoogleSignIn = async () => {
+    try {
+      // Simulate Google Sign-In with a demo user
+      await signIn('demo@google.com', 'demo123');
+    } catch (error) {
+      console.log('Google Sign In error:', error);
+    }
   };
 
-  const handleAppleSignIn = () => {
-    // In a real app, this would integrate with Apple Sign-In
-    console.log('Apple Sign In pressed');
+  const handleAppleSignIn = async () => {
+    try {
+      // Simulate Apple Sign-In with a demo user
+      await signIn('demo@apple.com', 'demo123');
+    } catch (error) {
+      console.log('Apple Sign In error:', error);
+    }
   };
 
   return (

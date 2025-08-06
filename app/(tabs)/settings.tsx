@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, ScrollView, Switch as RNSwitch, TouchableOpacity, Share as RNShare, Alert } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, Switch as RNSwitch, TouchableOpacity, Share as RNShare, Alert, Platform } from 'react-native';
 import { useTheme } from '@/hooks/use-theme';
 import { useAuth } from '@/hooks/use-auth-store';
 import { useAppSettings } from '@/hooks/use-app-settings';
@@ -32,12 +32,18 @@ export default function SettingsScreen() {
 
   const handleShareApp = async () => {
     try {
-      await RNShare.share({
-        message: 'Check out this amazing habit and task tracker app! It helps you stay productive and build better habits.',
+      const result = await RNShare.share({
+        message: 'Check out this amazing habit and task tracker app! It helps you stay productive and build better habits. Download it now!',
         title: 'Habit & Task Tracker',
+        url: Platform.OS === 'ios' ? 'https://apps.apple.com/app/habit-tracker' : 'https://play.google.com/store/apps/details?id=com.habittracker',
       });
+      
+      if (result.action === RNShare.sharedAction) {
+        console.log('App shared successfully');
+      }
     } catch (error) {
-      Alert.alert('Error', 'Unable to share the app at this time.');
+      console.error('Share error:', error);
+      Alert.alert('Share Failed', 'Unable to share the app at this time. Please try again later.');
     }
   };
 
