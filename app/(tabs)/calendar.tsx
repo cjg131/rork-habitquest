@@ -20,7 +20,7 @@ export default function CalendarScreen() {
   const { tasks } = useTasks();
   const { habits } = useHabits();
   const subscription = useSubscriptionStore();
-  const isPremium = subscription.isFeatureUnlocked('ai-calendar');
+  const isPremium = subscription.isFeatureUnlocked && subscription.isFeatureUnlocked('ai-calendar');
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [viewMode, setViewMode] = useState<'day' | 'week' | 'month'>('month');
@@ -56,9 +56,9 @@ export default function CalendarScreen() {
   };
 
   const getItemsForDate = (date: Date) => {
-    const dateStr = date.toDateString();
+    const dateStr = date.toISOString().split('T')[0]; // Format as YYYY-MM-DD
     const dayTasks = tasks.filter(task => 
-      task.dueDate && task.dueDate.toDateString() === dateStr
+      task.dueDate && task.dueDate.toISOString().split('T')[0] === dateStr
     );
     
     return { tasks: dayTasks };
