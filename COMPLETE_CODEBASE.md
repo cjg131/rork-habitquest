@@ -106,12 +106,12 @@
 ```json
 {
   "expo": {
-    "name": "HabitQuest",
-    "slug": "habitquest",
+    "name": "Stride",
+    "slug": "stride",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "habitquest",
+    "scheme": "stride",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -153,6 +153,7 @@ import { TasksProvider } from "@/hooks/use-tasks-store";
 import { HabitsProvider } from "@/hooks/use-habits-store";
 import { PomodoroProvider } from "@/hooks/use-pomodoro-store";
 import { GamificationProvider } from "@/hooks/use-gamification-store";
+import { SubscriptionProvider } from "@/hooks/use-subscription-store";
 import { trpc, trpcClient } from "@/lib/trpc";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -207,7 +208,9 @@ export default function RootLayout() {
                   <HabitsProvider>
                     <PomodoroProvider>
                       <GamificationProvider>
-                        <RootLayoutNav />
+                        <SubscriptionProvider>
+                          <RootLayoutNav />
+                        </SubscriptionProvider>
                       </GamificationProvider>
                     </PomodoroProvider>
                   </HabitsProvider>
