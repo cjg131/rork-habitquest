@@ -8,5 +8,8 @@ declare module 'lucide-react-native' {
   }
 
   export const Download: ComponentType<IconProps>;
+  export const ChevronLeft: ComponentType<IconProps>;
+  export const ChevronRight: ComponentType<IconProps>;
+  export const Plus: ComponentType<IconProps>;
   // Add other icons as needed
 }
