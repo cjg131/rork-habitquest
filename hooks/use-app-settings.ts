@@ -23,6 +23,7 @@ const defaultSettings: AppSettings = {
     highContrast: false,
     reduceMotion: false,
   },
+  frictionlessMode: false,
 };
 
 export const [AppSettingsProvider, useAppSettings] = createContextHook(() => {

@@ -109,7 +109,7 @@ export type ThemeOption = {
 };
 
 export type AppSettings = {
-  theme: "light" | "system";
+  theme: "light" | "dark" | "system";
   customTheme?: string;
   notificationsEnabled: boolean;
   completedItemsDisplay: "crossedOut" | "moveToCompleted";
@@ -129,6 +129,7 @@ export type AppSettings = {
     highContrast: boolean;
     reduceMotion: boolean;
   };
+  frictionlessMode: boolean;
 };
 
 export type SubscriptionPlan = {

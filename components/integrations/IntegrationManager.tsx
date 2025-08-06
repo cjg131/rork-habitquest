@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, FlatList } from 'react-native';
-import { useSubscriptionStore } from '@/hooks/use-subscription-store';
-import { useHabitsStore } from '@/hooks/use-habits-store';
-import { Checkbox } from '@/components/ui/Checkbox';
+import { useSubscription } from '@/hooks/use-subscription-store';
+import { useHabits } from '@/hooks/use-habits-store';
+import { Switch } from '@/components/ui/Switch';
 
 interface Integration {
   id: string;
@@ -18,8 +18,8 @@ interface HabitIntegration {
 }
 
 const IntegrationManager = () => {
-  const { isPremium } = useSubscriptionStore();
-  const { habits } = useHabitsStore();
+  const { isFeatureUnlocked } = useSubscription();
+  const { habits } = useHabits();
   const [integrations, setIntegrations] = useState<Integration[]>([
     { id: 'appleHealth', name: 'Apple Health', description: 'Sync fitness and health data', connected: false },
     { id: 'zapier', name: 'Zapier', description: 'Automate workflows with other apps', connected: false },
@@ -27,7 +27,7 @@ const IntegrationManager = () => {
   const [habitIntegrations, setHabitIntegrations] = useState<HabitIntegration[]>([]);
 
   const toggleIntegration = (index: number) => {
-    if (!isPremium) {
+    if (!isFeatureUnlocked('zapier-integration')) {
       Alert.alert('Premium Feature', 'Integrations are available for Premium users only. Upgrade to access this feature.');
       return;
     }
@@ -46,7 +46,7 @@ const IntegrationManager = () => {
   };
 
   const toggleHabitIntegration = (habitId: string, integrationId: string) => {
-    if (!isPremium) return;
+    if (!isFeatureUnlocked('zapier-integration')) return;
 
     const existingIndex = habitIntegrations.findIndex(
       hi => hi.habitId === habitId && hi.integrationId === integrationId
@@ -91,10 +91,10 @@ const IntegrationManager = () => {
             return (
               <View key={habit.id} style={styles.habitItem}>
                 <Text style={styles.habitName}>{habit.name}</Text>
-                <Checkbox
+                <Switch
                   checked={isLinked}
                   onChange={() => toggleHabitIntegration(habit.id, item.id)}
-                  testId={`checkbox-${habit.id}-${item.id}`}
+                  testId={`switch-${habit.id}-${item.id}`}
                 />
               </View>
             );
@@ -107,7 +107,7 @@ const IntegrationManager = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Integrations</Text>
-      {!isPremium && (
+      {!isFeatureUnlocked('zapier-integration') && (
         <Text style={styles.premiumNotice}>
           Integrations are a Premium feature. Upgrade to connect with Apple Health and Zapier.
         </Text>

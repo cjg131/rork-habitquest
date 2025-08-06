@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, TextInput } from 'react-native';
 import { Stack } from 'expo-router';
-import { useAuthStore } from '@/hooks/use-auth-store';
+import { useAuth } from '@/hooks/use-auth-store';
 import * as SecureStore from 'expo-secure-store';
 
 const AccountDeletionScreen = () => {
-  const { user } = useAuthStore();
+  const { user } = useAuth();
   const [gracePeriod, setGracePeriod] = useState('60');
   const [isDeleting, setIsDeleting] = useState(false);
 
