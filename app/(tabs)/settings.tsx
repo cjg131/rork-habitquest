@@ -10,6 +10,8 @@ import { useRouter } from 'expo-router';
 import { useOfflineSync } from '@/hooks/use-offline-sync';
 import OfflineBanner from '@/components/offline/OfflineBanner';
 import IntegrationManager from '@/components/integrations/IntegrationManager';
+import ExportManager from '@/components/data/ExportManager';
+import ImportManager from '@/components/data/ImportManager';
 import { 
   Bell, 
   Clock, 
@@ -233,6 +235,28 @@ export default function SettingsScreen() {
           title="Integrations"
           description="Connect with Apple Health and Zapier (Premium)"
           action={() => router.push('/modal?type=integrations')}
+          isSwitch={false}
+          value={undefined}
+        />
+        
+        <View style={[styles.divider, { backgroundColor: colors.border }]} />
+        
+        <SettingItem
+          icon={<SettingsIcon size={20} color={colors.primary} />}
+          title="Data Export"
+          description="Export your data as CSV or PDF (Premium)"
+          action={() => router.push('/modal?type=data-export')}
+          isSwitch={false}
+          value={undefined}
+        />
+        
+        <View style={[styles.divider, { backgroundColor: colors.border }]} />
+        
+        <SettingItem
+          icon={<SettingsIcon size={20} color={colors.primary} />}
+          title="Data Import"
+          description="Import data from CSV (Premium)"
+          action={() => router.push('/modal?type=data-import')}
           isSwitch={false}
           value={undefined}
         />

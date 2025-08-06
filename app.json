@@ -31,7 +31,10 @@
       "package": "app.rork.habitquest-bad1ue2",
       "permissions": [
         "ACCESS_NETWORK_STATE",
-        "ACCESS_WIFI_STATE"
+        "ACCESS_WIFI_STATE",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "INTERNET"
       ]
     },
     "web": {

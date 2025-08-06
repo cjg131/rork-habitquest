@@ -8,6 +8,8 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { ChevronLeft, ChevronRight, Plus } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
+import { useSubscription } from '@/hooks/use-subscription-store';
+import { Alert } from 'react-native';
 
 const { width } = Dimensions.get('window');
 const CELL_SIZE = (width - 32 - 48) / 7; // Account for padding and gaps
@@ -17,8 +19,10 @@ export default function CalendarScreen() {
   const router = useRouter();
   const { tasks } = useTasks();
   const { habits } = useHabits();
+  const { isPremium } = useSubscription();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [viewMode, setViewMode] = useState<'day' | 'week' | 'month'>('month');
 
   const monthNames = [
     'January', 'February', 'March', 'April', 'May', 'June',
@@ -69,6 +73,19 @@ export default function CalendarScreen() {
     setCurrentMonth(newMonth);
   };
 
+  const handleViewModeChange = (mode: 'day' | 'week' | 'month') => {
+    setViewMode(mode);
+  };
+
+  const handleAIReschedule = (taskId: string) => {
+    if (!isPremium) {
+      Alert.alert('Premium Feature', 'AI rescheduling is available for Premium users only. Upgrade to unlock this feature.');
+      return;
+    }
+    // Placeholder for AI rescheduling logic
+    Alert.alert('AI Reschedule', 'This feature will suggest new times for incomplete tasks. Coming soon!');
+  };
+
   const isToday = (date: Date) => {
     const today = new Date();
     return date.toDateString() === today.toDateString();
@@ -108,6 +125,26 @@ export default function CalendarScreen() {
             style={[styles.navButton, { backgroundColor: colors.card }]}
           >
             <ChevronRight size={20} color={colors.text.primary} />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.viewModeContainer}>
+          <TouchableOpacity
+            style={[styles.viewModeButton, viewMode === 'day' && styles.activeViewModeButton]}
+            onPress={() => handleViewModeChange('day')}
+          >
+            <Text style={[styles.viewModeText, viewMode === 'day' && styles.activeViewModeText, { color: viewMode === 'day' ? '#fff' : colors.text.primary }]}>Day</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.viewModeButton, viewMode === 'week' && styles.activeViewModeButton]}
+            onPress={() => handleViewModeChange('week')}
+          >
+            <Text style={[styles.viewModeText, viewMode === 'week' && styles.activeViewModeText, { color: viewMode === 'week' ? '#fff' : colors.text.primary }]}>Week</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.viewModeButton, viewMode === 'month' && styles.activeViewModeButton]}
+            onPress={() => handleViewModeChange('month')}
+          >
+            <Text style={[styles.viewModeText, viewMode === 'month' && styles.activeViewModeText, { color: viewMode === 'month' ? '#fff' : colors.text.primary }]}>Month</Text>
           </TouchableOpacity>
         </View>
 
@@ -196,6 +233,14 @@ export default function CalendarScreen() {
                   variant={task.completed ? 'success' : 'warning'}
                   size="sm"
                 />
+                {!task.completed && isPremium && (
+                  <TouchableOpacity
+                    style={styles.rescheduleButton}
+                    onPress={() => handleAIReschedule(task.id)}
+                  >
+                    <Text style={[styles.rescheduleText, { color: colors.primary }]}>Reschedule</Text>
+                  </TouchableOpacity>
+                )}
               </View>
             ))}
           </Card>
@@ -327,5 +372,39 @@ const styles = StyleSheet.create({
   },
   addButton: {
     alignSelf: 'center',
+  },
+  viewModeContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 16,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+  viewModeButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  activeViewModeButton: {
+    backgroundColor: '#007AFF',
+  },
+  viewModeText: {
+    fontSize: 14,
+  },
+  activeViewModeText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  rescheduleButton: {
+    marginLeft: 8,
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    backgroundColor: '#007AFF22',
+    borderRadius: 4,
+  },
+  rescheduleText: {
+    fontSize: 12,
   },
 });

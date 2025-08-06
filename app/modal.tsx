@@ -6,6 +6,9 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useHabits } from '@/hooks/use-habits-store';
 import { useTasks } from '@/hooks/use-tasks-store';
 import { useAppSettings } from '@/hooks/use-app-settings';
+import ExportManager from '@/components/data/ExportManager';
+import ImportManager from '@/components/data/ImportManager';
+import IntegrationManager from '@/components/integrations/IntegrationManager';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
@@ -22,7 +25,7 @@ export default function ModalScreen() {
   const { tasks, addTask, updateTask, deleteTask } = useTasks();
   const { settings, updatePomodoroSettings } = useAppSettings();
   
-  const type = params.type as 'habit' | 'task' | 'pomodoro-settings' | 'privacy-settings' | 'help-support' | 'profile-edit' | undefined;
+  const type = params.type as 'habit' | 'task' | 'pomodoro-settings' | 'privacy-settings' | 'help-support' | 'profile-edit' | 'data-export' | 'data-import' | 'integrations' | undefined;
   const id = params.id as string | undefined;
   const isEditing = Boolean(id);
   
@@ -187,6 +190,9 @@ export default function ModalScreen() {
     if (type === 'privacy-settings') return 'Privacy Settings';
     if (type === 'help-support') return 'Help & Support';
     if (type === 'profile-edit') return 'Edit Profile';
+    if (type === 'data-export') return 'Data Export';
+    if (type === 'data-import') return 'Data Import';
+    if (type === 'integrations') return 'Integrations';
     
     if (isEditing) {
       return `Edit ${type === 'habit' ? 'Habit' : 'Task'}`;
@@ -305,6 +311,93 @@ export default function ModalScreen() {
                'This feature is coming soon! You\'ll be able to edit your profile information.'}
             </Text>
           </Card>
+        </View>
+        
+        <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
+      </View>
+    );
+  }
+
+  // Handle data export screen
+  if (type === 'data-export') {
+    return (
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
+        <View style={[styles.header, { borderBottomColor: colors.border }]}>
+          <Button
+            title=""
+            leftIcon={<X size={24} color={colors.text.primary} />}
+            variant="ghost"
+            onPress={() => router.back()}
+            style={styles.headerButton}
+          />
+          
+          <Text style={[styles.headerTitle, { color: colors.text.primary }]}>
+            {getTitle()}
+          </Text>
+          
+          <View style={styles.headerButton} />
+        </View>
+        
+        <View style={styles.content}>
+          <ExportManager />
+        </View>
+        
+        <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
+      </View>
+    );
+  }
+
+  // Handle data import screen
+  if (type === 'data-import') {
+    return (
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
+        <View style={[styles.header, { borderBottomColor: colors.border }]}>
+          <Button
+            title=""
+            leftIcon={<X size={24} color={colors.text.primary} />}
+            variant="ghost"
+            onPress={() => router.back()}
+            style={styles.headerButton}
+          />
+          
+          <Text style={[styles.headerTitle, { color: colors.text.primary }]}>
+            {getTitle()}
+          </Text>
+          
+          <View style={styles.headerButton} />
+        </View>
+        
+        <View style={styles.content}>
+          <ImportManager />
+        </View>
+        
+        <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
+      </View>
+    );
+  }
+
+  // Handle integrations screen
+  if (type === 'integrations') {
+    return (
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
+        <View style={[styles.header, { borderBottomColor: colors.border }]}>
+          <Button
+            title=""
+            leftIcon={<X size={24} color={colors.text.primary} />}
+            variant="ghost"
+            onPress={() => router.back()}
+            style={styles.headerButton}
+          />
+          
+          <Text style={[styles.headerTitle, { color: colors.text.primary }]}>
+            {getTitle()}
+          </Text>
+          
+          <View style={styles.headerButton} />
+        </View>
+        
+        <View style={styles.content}>
+          <IntegrationManager />
         </View>
         
         <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
