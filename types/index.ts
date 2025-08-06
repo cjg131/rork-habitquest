@@ -8,9 +8,14 @@ export type User = {
   xpToNextLevel: number;
   currency: number;
   streakCorrections: number;
+  graceDaysUsed: number;
+  graceDaysEarned: number;
   premium: boolean;
   premiumType?: 'monthly' | 'annual';
   adRemoval?: 'basic' | 'complete';
+  trialStartDate: Date;
+  trialEndDate: Date;
+  lastAdShown?: Date;
   createdAt: Date;
 };
 
@@ -124,4 +129,33 @@ export type AppSettings = {
     highContrast: boolean;
     reduceMotion: boolean;
   };
+};
+
+export type SubscriptionPlan = {
+  id: 'free' | 'premium-monthly' | 'premium-annual' | 'ad-removal-basic' | 'ad-removal-complete';
+  name: string;
+  price: number;
+  period?: 'month' | 'year' | 'one-time';
+  features: string[];
+  popular?: boolean;
+};
+
+export type PurchaseResult = {
+  success: boolean;
+  planId?: string;
+  error?: string;
+};
+
+export type TrialStatus = {
+  isActive: boolean;
+  daysRemaining: number;
+  hasExpired: boolean;
+};
+
+export type GraceDayAction = {
+  id: string;
+  type: 'manual' | 'xp-purchase' | 'skip-conversion';
+  date: Date;
+  habitId?: string;
+  xpCost?: number;
 };

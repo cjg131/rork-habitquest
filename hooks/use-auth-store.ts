@@ -13,7 +13,11 @@ const mockUser: User = {
   xpToNextLevel: 100,
   currency: 0,
   streakCorrections: 3,
+  graceDaysUsed: 0,
+  graceDaysEarned: 0,
   premium: false,
+  trialStartDate: new Date(),
+  trialEndDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 days from now
   createdAt: new Date(),
 };
 
@@ -31,6 +35,9 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
           setUser({
             ...parsedUser,
             createdAt: new Date(parsedUser.createdAt),
+            trialStartDate: new Date(parsedUser.trialStartDate),
+            trialEndDate: new Date(parsedUser.trialEndDate),
+            lastAdShown: parsedUser.lastAdShown ? new Date(parsedUser.lastAdShown) : undefined,
           });
         }
       } catch (error) {
@@ -75,6 +82,8 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
         email,
         name,
         createdAt: new Date(),
+        trialStartDate: new Date(),
+        trialEndDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 days from now
       };
       
       await AsyncStorage.setItem('user', JSON.stringify(newUser));
