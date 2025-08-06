@@ -2,120 +2,122 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Platform } from 'react-native';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
+import { useTheme } from '@/hooks/use-theme';
 import { useSubscriptionStore } from '@/hooks/use-subscription-store';
 import { useTasks } from '@/hooks/use-tasks-store';
-import { useHabitsStore } from '@/hooks/use-habits-store';
+import { useHabits } from '@/hooks/use-habits-store';
 import { useGamification } from '@/hooks/use-gamification-store';
+import { Button } from '@/components/ui/Button';
+import { Download } from 'lucide-react-native';
 
-const ExportManager: React.FC = () => {
-  const { isFeatureUnlocked } = useSubscriptionStore();
+interface ExportManagerProps {
+  style?: any;
+}
+
+export function ExportManager({ style }: ExportManagerProps) {
+  const { colors } = useTheme();
+  const subscription = useSubscriptionStore();
   const { tasks } = useTasks();
-  const { habits } = useHabitsStore();
-  const { badges } = useGamification();
-  // Using dummy data as actual properties are not available in the type
-  const xp = 0;
-  const level = 1;
-  const streak = 0;
-  const [isExporting, setIsExporting] = useState(false);
+  const { habits } = useHabits();
+  const { level, xp, badges } = useGamification();
+  const [exporting, setExporting] = useState(false);
 
-  const handleExportCSV = async () => {
-    if (!isFeatureUnlocked('data-export')) {
-      Alert.alert('Premium Feature', 'Data export is available for Premium users only. Upgrade to unlock this feature.');
+  const handleExportData = async (format: 'csv' | 'pdf') => {
+    if (!subscription.isFeatureUnlocked('data-export')) {
+      Alert.alert('Premium Feature', 'Exporting data is available for Premium users only. Upgrade to unlock this feature.');
       return;
     }
 
-    setIsExporting(true);
+    setExporting(true);
     try {
-      const csvContent = convertToCSV({ tasks, habits, xp, level, streak });
-      const fileUri = `${FileSystem.documentDirectory}stride_data.csv`;
-      if (Platform.OS !== 'web') {
-      await FileSystem.writeAsStringAsync(fileUri, csvContent);
-    } else {
-      console.warn('File writing is not supported on web.');
-      const blob = new Blob([csvContent], { type: 'text/csv' });
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'stride_data.csv';
-      link.click();
-      window.URL.revokeObjectURL(url);
-    }
-      if (Platform.OS !== 'web') {
-      await Sharing.shareAsync(fileUri, { mimeType: 'text/csv', dialogTitle: 'Share Stride Data CSV' });
-    } else {
-      console.log('Sharing not supported on web, file already downloaded');
-    }
+      let fileUri: string;
+      let mimeType: string;
+      let dialogTitle: string;
+
+      if (format === 'csv') {
+        const csvContent = convertToCSV();
+        fileUri = `${FileSystem.documentDirectory}stride_data.csv`;
+        if (Platform.OS !== 'web') {
+          await FileSystem.writeAsStringAsync(fileUri, csvContent);
+        } else {
+          const blob = new Blob([csvContent], { type: 'text/csv' });
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = 'stride_data.csv';
+          link.click();
+          window.URL.revokeObjectURL(url);
+          setExporting(false);
+          return;
+        }
+        mimeType = 'text/csv';
+        dialogTitle = 'Share Stride Data CSV';
+      } else {
+        // PDF export logic would go here
+        // For now, we'll simulate a placeholder since PDF generation might require additional libraries
+        Alert.alert('PDF Export', 'PDF export is coming soon. Please use CSV export for now.');
+        setExporting(false);
+        return;
+      }
+
+      await Sharing.shareAsync(fileUri, { mimeType, dialogTitle });
     } catch (error) {
-      console.error('Error exporting CSV:', error);
-      Alert.alert('Error', 'Failed to export data as CSV. Please try again.');
+      console.error(`Error exporting data as ${format}:`, error);
+      Alert.alert('Error', `Failed to export data as ${format.toUpperCase()}. Please try again.`, [
+        { text: 'OK' },
+        { text: 'Retry', onPress: () => handleExportData(format) }
+      ]);
     } finally {
-      setIsExporting(false);
+      setExporting(false);
     }
   };
 
-  const handleExportPDF = async () => {
-    if (!isFeatureUnlocked('data-export')) {
-      Alert.alert('Premium Feature', 'Data export is available for Premium users only. Upgrade to unlock this feature.');
-      return;
-    }
-
-    setIsExporting(true);
-    try {
-      // Placeholder for PDF export logic
-      Alert.alert('Coming Soon', 'PDF export functionality will be available in a future update.');
-    } catch (error) {
-      console.error('Error exporting PDF:', error);
-      Alert.alert('Error', 'Failed to export data as PDF. Please try again.');
-    } finally {
-      setIsExporting(false);
-    }
-  };
-
-  const convertToCSV = (data: any) => {
-    const headers = ['Type,Name,Status,Details'];
-    const taskRows = data.tasks.map((task: any) => `Task,"${task.title}",${task.completed ? 'Completed' : 'Pending'},"${task.description || ''}"`);
-    const habitRows = data.habits.map((habit: any) => `Habit,"${habit.name}",${habit.completed ? 'Completed' : 'Pending'},Streak: ${habit.streak}`);
-    const gamificationRows = [`Gamification,XP: ${data.xp},Level: ${data.level},Streak: ${data.streak}`];
+  const convertToCSV = () => {
+    const headers = ['Category,Details'];
+    const taskRows = tasks.map(task => `Task,"${task.title}, Completed: ${task.completed}"`);
+    const habitRows = habits.map(habit => `Habit,"${habit.name}, Streak: ${habit.streak}"`);
+    const gamificationRows = [
+      `Gamification,"Level: ${level}, XP: ${xp}, Badges: ${badges.length}"`
+    ];
     return [...headers, ...taskRows, ...habitRows, ...gamificationRows].join('\n');
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Data Export</Text>
-      <Text style={styles.description}>Export your Stride data as CSV or PDF. Available for Premium users only.</Text>
+    <View style={[styles.container, style]}>
+      <Text style={[styles.title, { color: colors.text.primary }]}>Export Data</Text>
+      <Text style={[styles.description, { color: colors.text.secondary }]}>
+        Export your tasks, habits, and progress data.
+      </Text>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={[styles.button, isExporting && styles.disabledButton]}
-          onPress={handleExportCSV}
-          disabled={isExporting || !isFeatureUnlocked('data-export')}
-          testID="export-csv-button"
-        >
-          <Text style={styles.buttonText}>Export CSV</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, isExporting && styles.disabledButton]}
-          onPress={handleExportPDF}
-          disabled={isExporting || !isFeatureUnlocked('data-export')}
-          testID="export-pdf-button"
-        >
-          <Text style={styles.buttonText}>Export PDF</Text>
-        </TouchableOpacity>
+        <Button
+          title="Export as CSV"
+          onPress={() => handleExportData('csv')}
+          disabled={exporting || !subscription.isFeatureUnlocked('data-export')}
+          style={[styles.button, styles.csvButton]}
+          leftIcon={<Download size={20} color="#fff" />}
+        />
+        <Button
+          title="Export as PDF"
+          onPress={() => handleExportData('pdf')}
+          disabled={exporting || !subscription.isFeatureUnlocked('data-export') || Platform.OS === 'web'}
+          style={[styles.button, styles.pdfButton]}
+          leftIcon={<Download size={20} color="#fff" />}
+        />
       </View>
+      {!subscription.isFeatureUnlocked('data-export') && (
+        <Text style={[styles.premiumNotice, { color: colors.text.secondary }]}>
+          Export feature available for Premium users only
+        </Text>
+      )}
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    borderRadius: 8,
+    marginVertical: 8,
   },
   title: {
     fontSize: 18,
@@ -124,7 +126,6 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 14,
-    color: '#666',
     marginBottom: 16,
   },
   buttonContainer: {
@@ -133,20 +134,17 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
-    padding: 12,
-    backgroundColor: '#007AFF',
-    borderRadius: 8,
-    alignItems: 'center',
     marginHorizontal: 4,
   },
-  disabledButton: {
-    backgroundColor: '#ccc',
+  csvButton: {
+    backgroundColor: '#007AFF',
   },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+  pdfButton: {
+    backgroundColor: '#FF2D55',
+  },
+  premiumNotice: {
+    fontSize: 14,
+    textAlign: 'center',
+    marginTop: 16,
   },
 });
-
-export default ExportManager;

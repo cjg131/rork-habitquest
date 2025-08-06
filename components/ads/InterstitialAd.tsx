@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Modal, TouchableOpacity, Dimensions, Platform } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Modal, Platform, Alert } from 'react-native';
 import { useTheme } from '@/hooks/use-theme';
-import { useSubscription } from '@/hooks/use-subscription-store';
+import { useSubscriptionStore } from '@/hooks/use-subscription-store';
 import { X, ExternalLink } from 'lucide-react-native';
 
 interface InterstitialAdProps {
@@ -11,14 +11,17 @@ interface InterstitialAdProps {
 
 export function InterstitialAd({ visible, onClose }: InterstitialAdProps) {
   const { colors } = useTheme();
-  const { markAdShown } = useSubscription();
+  const { canShowAd, markAdShown } = useSubscriptionStore();
+  const [adVisible, setAdVisible] = useState(visible);
   const [countdown, setCountdown] = useState<number>(5);
 
   useEffect(() => {
-    if (visible) {
+    if (visible && canShowAd()) {
+      setAdVisible(true);
       setCountdown(5);
-      markAdShown();
-      
+      // TODO: Load actual interstitial ad from AdMob or chosen ad provider
+      // For development, use test ID: ca-app-pub-3940256099942544/1033173712
+      // Production ID placeholder: [INSERT ACTUAL INTERSTITIAL AD UNIT ID HERE]
       const timer = setInterval(() => {
         setCountdown(prev => {
           if (prev <= 1) {
@@ -28,33 +31,33 @@ export function InterstitialAd({ visible, onClose }: InterstitialAdProps) {
           return prev - 1;
         });
       }, 1000);
-
       return () => clearInterval(timer);
+    } else {
+      setAdVisible(false);
+      onClose();
     }
-  }, [visible, markAdShown]);
+  }, [visible, canShowAd, onClose]);
 
   const handleClose = () => {
     if (countdown === 0) {
+      setAdVisible(false);
+      markAdShown();
       onClose();
     }
   };
 
-  // AdMob is not fully supported on web, so we provide a fallback
-  if (Platform.OS === 'web') {
+  if (Platform.OS === 'web' || !adVisible) {
     return null;
   }
 
-  // TODO: Replace with actual AdMob Interstitial component and ID
-  // For development, use test ID: ca-app-pub-3940256099942544/1033173712
-  // Production ID placeholder: [INSERT ACTUAL INTERSTITIAL AD UNIT ID HERE]
   return (
     <Modal
-      visible={visible}
-      transparent
       animationType="fade"
+      transparent={true}
+      visible={adVisible}
       onRequestClose={handleClose}
     >
-      <View style={styles.overlay}>
+      <View style={[styles.overlay, { backgroundColor: 'rgba(0, 0, 0, 0.8)' }]}>
         <View style={[styles.container, { backgroundColor: colors.background }]}>
           <TouchableOpacity
             style={[styles.closeButton, { opacity: countdown === 0 ? 1 : 0.5 }]}
@@ -93,17 +96,14 @@ export function InterstitialAd({ visible, onClose }: InterstitialAdProps) {
   );
 }
 
-const { width, height } = Dimensions.get('window');
-
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
     justifyContent: 'center',
     alignItems: 'center',
   },
   container: {
-    width: width * 0.9,
+    width: '90%',
     maxWidth: 400,
     borderRadius: 16,
     padding: 24,

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import { useTheme } from '@/hooks/use-theme';
-import { useSubscription } from '@/hooks/use-subscription-store';
+import { useSubscriptionStore } from '@/hooks/use-subscription-store';
 import { ExternalLink } from 'lucide-react-native';
 
 interface AdBannerProps {
@@ -10,7 +10,7 @@ interface AdBannerProps {
 
 export function AdBanner({ style }: AdBannerProps) {
   const { colors } = useTheme();
-  const { shouldShowBannerAd } = useSubscription();
+  const { shouldShowBannerAd } = useSubscriptionStore();
 
   // AdMob is not fully supported on web, so we provide a fallback
   if (Platform.OS === 'web' || !shouldShowBannerAd()) {

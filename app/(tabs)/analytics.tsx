@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/Button';
 import { BarChart, PieChart } from 'react-native-chart-kit';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
-import { Download } from 'lucide-react-native';
+import { DownloadCloud } from 'lucide-react-native';
 
 const { width } = Dimensions.get('window');
 const chartConfig = {
@@ -36,7 +36,8 @@ const AnalyticsScreen: React.FC = () => {
   const { habits } = useHabits();
   const { badges } = useGamification();
   const subscription = useSubscriptionStore();
-  const isPremium = subscription.isFeatureUnlocked('unlimited-tasks');
+  // Removed unused isPremium variable
+// Feature gating is handled by isFeatureUnlocked checks
   const [exporting, setExporting] = useState(false);
 
   const completedTasks = tasks.filter(task => task.completed).length;
@@ -137,7 +138,7 @@ const AnalyticsScreen: React.FC = () => {
       <View style={styles.exportContainer}>
         <Button
           title="Export Analytics"
-          leftIcon={<Download size={20} color="#fff" />}
+          leftIcon={<DownloadCloud size={20} color="#fff" />}
           onPress={handleExportAnalytics}
           disabled={exporting || !subscription.isFeatureUnlocked('data-export')}
           style={[styles.exportButton, !subscription.isFeatureUnlocked('data-export') && styles.disabledButton]}

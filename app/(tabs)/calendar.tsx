@@ -6,7 +6,7 @@ import { useHabits } from '@/hooks/use-habits-store';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
-import { ChevronLeft, ChevronRight, Plus } from 'lucide-react-native';
+import { ChevronLeft, ChevronRight, PlusCircle } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 import { useSubscriptionStore } from '@/hooks/use-subscription-store';
 import { Alert } from 'react-native';
@@ -20,7 +20,7 @@ export default function CalendarScreen() {
   const { tasks } = useTasks();
   const { habits } = useHabits();
   const subscription = useSubscriptionStore();
-  const isPremium = subscription.isFeatureUnlocked && subscription.isFeatureUnlocked('ai-calendar');
+  const isPremium = subscription.isFeatureUnlocked('ai-calendar');
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [viewMode, setViewMode] = useState<'day' | 'week' | 'month'>('month');
@@ -85,6 +85,10 @@ export default function CalendarScreen() {
     }
     // Placeholder for AI rescheduling logic
     Alert.alert('AI Reschedule', 'This feature will suggest new times for incomplete tasks. Coming soon!');
+  };
+
+  const handleAddTask = () => {
+    router.push(`/modal?type=task&dueDate=${selectedDate.toISOString()}`);
   };
 
   const isToday = (date: Date) => {
@@ -213,10 +217,10 @@ export default function CalendarScreen() {
           </Text>
           <Button
             title=""
-            leftIcon={<Plus size={20} color={colors.primary} />}
+            leftIcon={<PlusCircle size={20} color={colors.primary} />}
             variant="ghost"
             size="sm"
-            onPress={() => router.push(`/modal?type=task&dueDate=${selectedDate.toISOString()}`)}
+            onPress={handleAddTask}
           />
         </View>
 
@@ -247,8 +251,6 @@ export default function CalendarScreen() {
           </Card>
         )}
 
-
-
         {selectedDateItems.tasks.length === 0 && (
           <Card style={styles.itemsCard}>
             <Text style={[styles.emptyText, { color: colors.text.secondary }]}>
@@ -258,7 +260,7 @@ export default function CalendarScreen() {
               title="Add Task"
               variant="outline"
               size="sm"
-              onPress={() => router.push(`/modal?type=task&dueDate=${selectedDate.toISOString()}`)}
+              onPress={handleAddTask}
               style={styles.addButton}
             />
           </Card>
