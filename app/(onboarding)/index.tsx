@@ -120,13 +120,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: colors.primary,
+    color: themeColors.primary,
     textAlign: 'center',
     marginBottom: 10
   },
   subtitle: {
     fontSize: 16,
-    color: colors.text.secondary,
+    color: themeColors.text.secondary,
     textAlign: 'center',
     marginBottom: 40
   },
@@ -136,26 +136,26 @@ const styles = StyleSheet.create({
   question: {
     fontSize: 20,
     fontWeight: '600',
-    color: colors.text.primary,
+    color: themeColors.text.primary,
     marginBottom: 20,
     textAlign: 'center'
   },
   option: {
     padding: 15,
-    backgroundColor: colors.card,
+    backgroundColor: themeColors.card,
     borderRadius: 10,
     marginBottom: 10,
     alignItems: 'center'
   },
   selectedOption: {
-    backgroundColor: colors.primary,
+    backgroundColor: themeColors.primary,
   },
   optionText: {
     fontSize: 16,
-    color: colors.text.primary.light
+    color: themeColors.text.primary,
   },
   selectedOptionText: {
-    color: colors.background,
+    color: themeColors.background,
     fontWeight: 'bold'
   },
   skipButton: {
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
   },
   skipButtonText: {
     fontSize: 16,
-    color: colors.text.secondary.light
+    color: themeColors.text.secondary,
   },
   progressContainer: {
     alignItems: 'center',
@@ -173,6 +173,6 @@ const styles = StyleSheet.create({
   },
   progressText: {
     fontSize: 14,
-    color: colors.text.secondary.light
+    color: themeColors.text.secondary,
   }
 });
