@@ -35,7 +35,7 @@ const AnalyticsScreen: React.FC = () => {
   const { tasks } = useTasks();
   const { habits } = useHabits();
   const { badges } = useGamification();
-  const { isPremium } = useSubscriptionStore();
+  const { isPremium } = useSubscription();
   const [exporting, setExporting] = useState(false);
 
   const completedTasks = tasks.filter(task => task.completed).length;
