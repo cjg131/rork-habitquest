@@ -27,7 +27,7 @@ export default function OnboardingScreen() {
         trackTasks: answer === 'Tasks' || answer === 'All',
         trackPomodoro: answer === 'Pomodoro/Focus' || answer === 'All',
         reminderFrequency: (answers.reminders || answer) as 'none' | 'daily' | 'weekly' | 'custom',
-        goal: answers.goal || answer
+        // goal: answers.goal || answer // Removed as it's not in OnboardingState type
       });
       completeOnboarding().then(() => {
         router.replace('/(tabs)');
@@ -100,7 +100,7 @@ export default function OnboardingScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background as string }]}>
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
       <Text style={styles.title}>Let’s Get Started</Text>
       <Text style={styles.subtitle}>Answer a few questions to personalize your experience.</Text>
@@ -121,13 +121,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: colors.primary,
+    color: colors.primary as string,
     textAlign: 'center',
     marginBottom: 10
   },
   subtitle: {
     fontSize: 16,
-    color: colors.text.secondary,
+    color: colors.text.secondary as string,
     textAlign: 'center',
     marginBottom: 40
   },
@@ -137,26 +137,26 @@ const styles = StyleSheet.create({
   question: {
     fontSize: 20,
     fontWeight: '600',
-    color: colors.text.primary,
+    color: colors.text.primary as string,
     marginBottom: 20,
     textAlign: 'center'
   },
   option: {
     padding: 15,
-    backgroundColor: colors.card,
+    backgroundColor: colors.card as string,
     borderRadius: 10,
     marginBottom: 10,
     alignItems: 'center'
   },
   selectedOption: {
-    backgroundColor: colors.primary,
+    backgroundColor: colors.primary as string,
   },
   optionText: {
     fontSize: 16,
-    color: colors.text.primary
+    color: colors.text.primary as string
   },
   selectedOptionText: {
-    color: colors.background,
+    color: colors.background as string,
     fontWeight: 'bold'
   },
   skipButton: {
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
   },
   skipButtonText: {
     fontSize: 16,
-    color: colors.text.secondary
+    color: colors.text.secondary as string
   },
   progressContainer: {
     alignItems: 'center',
@@ -174,6 +174,6 @@ const styles = StyleSheet.create({
   },
   progressText: {
     fontSize: 14,
-    color: colors.text.secondary
+    color: colors.text.secondary as string
   }
 });
