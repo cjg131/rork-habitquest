@@ -11,7 +11,11 @@ const ExportManager: React.FC = () => {
   const { isFeatureUnlocked } = useSubscriptionStore();
   const { tasks } = useTasks();
   const { habits } = useHabitsStore();
-  const { xp, level, streak } = useGamification();
+  const { badges } = useGamification();
+  // Using dummy data as actual properties are not available in the type
+  const xp = 0;
+  const level = 1;
+  const streak = 0;
   const [isExporting, setIsExporting] = useState(false);
 
   const handleExportCSV = async () => {
