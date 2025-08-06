@@ -94,7 +94,7 @@ const IntegrationManager = () => {
                 <Switch
                   value={isLinked}
                   onValueChange={() => toggleHabitIntegration(habit.id, item.id)}
-                  testId={`switch-${habit.id}-${item.id}`}
+                  testID={`switch-${habit.id}-${item.id}`}
                 />
               </View>
             );
