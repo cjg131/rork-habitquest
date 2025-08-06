@@ -7,7 +7,7 @@ import { colors } from '@/constants/colors';
 import { StatusBar } from 'expo-status-bar';
 
 export default function OnboardingScreen() {
-  const { colors, colorScheme } = useTheme();
+  const { colors: themeColors } = useTheme();
   const router = useRouter();
   const { updateOnboardingState, completeOnboarding } = useOnboarding();
   const [step, setStep] = useState(1);
@@ -27,7 +27,6 @@ export default function OnboardingScreen() {
         trackTasks: answer === 'Tasks' || answer === 'All',
         trackPomodoro: answer === 'Pomodoro/Focus' || answer === 'All',
         reminderFrequency: (answers.reminders || answer) as 'none' | 'daily' | 'weekly' | 'custom',
-        // goal: answers.goal || answer // Removed as it's not in OnboardingState type
       });
       completeOnboarding().then(() => {
         router.replace('/(tabs)');
@@ -100,7 +99,7 @@ export default function OnboardingScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background[colorScheme] }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: themeColors.background.light }]}>
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
       <Text style={styles.title}>Let’s Get Started</Text>
       <Text style={styles.subtitle}>Answer a few questions to personalize your experience.</Text>
@@ -121,13 +120,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: colors.primary[colorScheme],
+    color: colors.primary.light,
     textAlign: 'center',
     marginBottom: 10
   },
   subtitle: {
     fontSize: 16,
-    color: colors.text.secondary[colorScheme],
+    color: colors.text.secondary.light,
     textAlign: 'center',
     marginBottom: 40
   },
@@ -137,26 +136,26 @@ const styles = StyleSheet.create({
   question: {
     fontSize: 20,
     fontWeight: '600',
-    color: colors.text.primary[colorScheme],
+    color: colors.text.primary.light,
     marginBottom: 20,
     textAlign: 'center'
   },
   option: {
     padding: 15,
-    backgroundColor: colors.card[colorScheme],
+    backgroundColor: colors.card.light,
     borderRadius: 10,
     marginBottom: 10,
     alignItems: 'center'
   },
   selectedOption: {
-    backgroundColor: colors.primary[colorScheme],
+    backgroundColor: colors.primary.light,
   },
   optionText: {
     fontSize: 16,
-    color: colors.text.primary
+    color: colors.text.primary.light
   },
   selectedOptionText: {
-    color: colors.background[colorScheme],
+    color: colors.background.light,
     fontWeight: 'bold'
   },
   skipButton: {
@@ -166,7 +165,7 @@ const styles = StyleSheet.create({
   },
   skipButtonText: {
     fontSize: 16,
-    color: colors.text.secondary
+    color: colors.text.secondary.light
   },
   progressContainer: {
     alignItems: 'center',
@@ -174,6 +173,6 @@ const styles = StyleSheet.create({
   },
   progressText: {
     fontSize: 14,
-    color: colors.text.secondary
+    color: colors.text.secondary.light
   }
 });
