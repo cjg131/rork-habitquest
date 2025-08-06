@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Platform } from 'react-native';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
-import { useSubscriptionStore } from '@/hooks/use-subscription-store';
+import { useSubscription } from '@/hooks/use-subscription-store';
 import { useTasks } from '@/hooks/use-tasks-store';
 import { useHabitsStore } from '@/hooks/use-habits-store';
 import { useGamification } from '@/hooks/use-gamification-store';
 
 const ExportManager: React.FC = () => {
-  const { isFeatureUnlocked } = useSubscriptionStore();
+  const { isFeatureUnlocked } = useSubscription();
   const { tasks } = useTasks();
   const { habits } = useHabitsStore();
   const { badges } = useGamification();
@@ -28,8 +28,23 @@ const ExportManager: React.FC = () => {
     try {
       const csvContent = convertToCSV({ tasks, habits, xp, level, streak });
       const fileUri = `${FileSystem.documentDirectory}stride_data.csv`;
+      if (Platform.OS !== 'web') {
       await FileSystem.writeAsStringAsync(fileUri, csvContent);
+    } else {
+      console.warn('File writing is not supported on web.');
+      const blob = new Blob([csvContent], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'stride_data.csv';
+      link.click();
+      window.URL.revokeObjectURL(url);
+    }
+      if (Platform.OS !== 'web') {
       await Sharing.shareAsync(fileUri, { mimeType: 'text/csv', dialogTitle: 'Share Stride Data CSV' });
+    } else {
+      console.log('Sharing not supported on web, file already downloaded');
+    }
     } catch (error) {
       console.error('Error exporting CSV:', error);
       Alert.alert('Error', 'Failed to export data as CSV. Please try again.');
