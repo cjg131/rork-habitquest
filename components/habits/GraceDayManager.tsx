@@ -146,7 +146,7 @@ export function GraceDayManager({ habitId, habitName, onGraceDayUsed }: GraceDay
               onPress={handlePurchaseGraceDays}
               disabled={loading}
               style={styles.actionButton}
-              icon={<Zap size={16} color={colors.primary} />}
+              leftIcon={<Zap size={16} color={colors.primary} />}
             />
           )}
         </View>

@@ -17,7 +17,7 @@ export function AdBanner({ style }: AdBannerProps) {
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.surface }, style]}>
+    <View style={[styles.container, { backgroundColor: colors.card }, style]}>
       <TouchableOpacity style={styles.adContent}>
         <ExternalLink size={16} color={colors.text.secondary} />
         <Text style={[styles.adText, { color: colors.text.secondary }]}>
