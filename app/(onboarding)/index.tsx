@@ -7,7 +7,7 @@ import { colors } from '@/constants/colors';
 import { StatusBar } from 'expo-status-bar';
 
 export default function OnboardingScreen() {
-  const theme = useTheme();
+  const { theme, colors: themeColors } = useTheme();
   const router = useRouter();
   const { updateOnboardingState, completeOnboarding } = useOnboarding();
   const [step, setStep] = useState(1);
@@ -99,13 +99,13 @@ export default function OnboardingScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: themeColors.background }]}>
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
-      <Text style={styles.title}>Let’s Get Started</Text>
-      <Text style={styles.subtitle}>Answer a few questions to personalize your experience.</Text>
+      <Text style={[styles.title, { color: themeColors.primary }]}>Let’s Get Started</Text>
+      <Text style={[styles.subtitle, { color: themeColors.secondary }]}>Answer a few questions to personalize your experience.</Text>
       {renderQuestion()}
       <View style={styles.progressContainer}>
-        <Text style={styles.progressText}>Step {step} of 3</Text>
+        <Text style={[styles.progressText, { color: themeColors.secondary }]}>Step {step} of 3</Text>
       </View>
     </SafeAreaView>
   );
@@ -120,13 +120,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: colors.primary[theme],
     textAlign: 'center',
     marginBottom: 10
   },
   subtitle: {
     fontSize: 16,
-    color: colors.neutral[theme],
     textAlign: 'center',
     marginBottom: 40
   },
@@ -136,26 +134,23 @@ const styles = StyleSheet.create({
   question: {
     fontSize: 20,
     fontWeight: '600',
-    color: colors.text[theme],
     marginBottom: 20,
     textAlign: 'center'
   },
   option: {
     padding: 15,
-    backgroundColor: colors.background[theme],
     borderRadius: 10,
     marginBottom: 10,
     alignItems: 'center'
   },
   selectedOption: {
-    backgroundColor: colors.primary[theme],
+    backgroundColor: themeColors.primary,
   },
   optionText: {
     fontSize: 16,
-    color: colors.text[theme],
   },
   selectedOptionText: {
-    color: colors.background[theme],
+    color: themeColors.background,
     fontWeight: 'bold'
   },
   skipButton: {
@@ -165,7 +160,6 @@ const styles = StyleSheet.create({
   },
   skipButtonText: {
     fontSize: 16,
-    color: colors.neutral[theme],
   },
   progressContainer: {
     alignItems: 'center',
@@ -173,6 +167,5 @@ const styles = StyleSheet.create({
   },
   progressText: {
     fontSize: 14,
-    color: colors.neutral[theme],
   }
 });
