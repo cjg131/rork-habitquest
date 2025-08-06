@@ -7,7 +7,7 @@ import { colors } from '@/constants/colors';
 import { StatusBar } from 'expo-status-bar';
 
 export default function OnboardingScreen() {
-  const { colors: themeColors } = useTheme();
+  const theme = useTheme();
   const router = useRouter();
   const { updateOnboardingState, completeOnboarding } = useOnboarding();
   const [step, setStep] = useState(1);
@@ -99,13 +99,13 @@ export default function OnboardingScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: themeColors.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
-      <Text style={[styles.title, { color: themeColors.primary }]}>Let’s Get Started</Text>
-      <Text style={[styles.subtitle, { color: themeColors.secondary }]}>Answer a few questions to personalize your experience.</Text>
+      <Text style={[styles.title, { color: theme.colors.primary }]}>Let’s Get Started</Text>
+      <Text style={[styles.subtitle, { color: theme.colors.secondary }]}>Answer a few questions to personalize your experience.</Text>
       {renderQuestion()}
       <View style={styles.progressContainer}>
-        <Text style={[styles.progressText, { color: themeColors.secondary }]}>Step {step} of 3</Text>
+        <Text style={[styles.progressText, { color: theme.colors.secondary }]}>Step {step} of 3</Text>
       </View>
     </SafeAreaView>
   );
@@ -144,13 +144,13 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   selectedOption: {
-    backgroundColor: themeColors.primary,
+    backgroundColor: theme.colors.primary,
   },
   optionText: {
     fontSize: 16,
   },
   selectedOptionText: {
-    color: themeColors.background,
+    color: theme.colors.background,
     fontWeight: 'bold'
   },
   skipButton: {
