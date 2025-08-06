@@ -7,7 +7,7 @@ import { colors } from '@/constants/colors';
 import { StatusBar } from 'expo-status-bar';
 
 export default function OnboardingScreen() {
-  const { colors } = useTheme();
+  const { colors, colorScheme } = useTheme();
   const router = useRouter();
   const { updateOnboardingState, completeOnboarding } = useOnboarding();
   const [step, setStep] = useState(1);
@@ -100,7 +100,7 @@ export default function OnboardingScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background[colorScheme] }]}>
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
       <Text style={styles.title}>Let’s Get Started</Text>
       <Text style={styles.subtitle}>Answer a few questions to personalize your experience.</Text>
@@ -121,13 +121,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: colors.primary as string,
+    color: colors.primary[colorScheme],
     textAlign: 'center',
     marginBottom: 10
   },
   subtitle: {
     fontSize: 16,
-    color: colors.text.secondary as string,
+    color: colors.text.secondary[colorScheme],
     textAlign: 'center',
     marginBottom: 40
   },
@@ -137,26 +137,26 @@ const styles = StyleSheet.create({
   question: {
     fontSize: 20,
     fontWeight: '600',
-    color: colors.text.primary as string,
+    color: colors.text.primary[colorScheme],
     marginBottom: 20,
     textAlign: 'center'
   },
   option: {
     padding: 15,
-    backgroundColor: colors.card as string,
+    backgroundColor: colors.card[colorScheme],
     borderRadius: 10,
     marginBottom: 10,
     alignItems: 'center'
   },
   selectedOption: {
-    backgroundColor: colors.primary as string,
+    backgroundColor: colors.primary[colorScheme],
   },
   optionText: {
     fontSize: 16,
     color: colors.text.primary
   },
   selectedOptionText: {
-    color: colors.background as string,
+    color: colors.background[colorScheme],
     fontWeight: 'bold'
   },
   skipButton: {
