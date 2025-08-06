@@ -8,21 +8,21 @@ import { useHabits } from '@/hooks/use-habits-store';
 import { useGamification } from '@/hooks/use-gamification-store';
 
 const ExportManager: React.FC = () => {
-  const { isPremium } = useSubscription();
+  const { isSubscribed } = useSubscription();
   const { tasks } = useTasks();
   const { habits } = useHabits();
-  const { xp, level, streak } = useGamification();
+  const { currentXP, currentLevel, currentStreak } = useGamification();
   const [isExporting, setIsExporting] = useState(false);
 
   const handleExportCSV = async () => {
-    if (!isPremium) {
+    if (!isSubscribed) {
       Alert.alert('Premium Feature', 'Data export is available for Premium users only. Upgrade to unlock this feature.');
       return;
     }
 
     setIsExporting(true);
     try {
-      const csvContent = convertToCSV({ tasks, habits, xp, level, streak });
+      const csvContent = convertToCSV({ tasks, habits, xp: currentXP, level: currentLevel, streak: currentStreak });
       const fileUri = `${FileSystem.documentDirectory}stride_data.csv`;
       await FileSystem.writeAsStringAsync(fileUri, csvContent);
       await Sharing.shareAsync(fileUri, { mimeType: 'text/csv', dialogTitle: 'Share Stride Data CSV' });
@@ -35,7 +35,7 @@ const ExportManager: React.FC = () => {
   };
 
   const handleExportPDF = async () => {
-    if (!isPremium) {
+    if (!isSubscribed) {
       Alert.alert('Premium Feature', 'Data export is available for Premium users only. Upgrade to unlock this feature.');
       return;
     }
@@ -68,7 +68,7 @@ const ExportManager: React.FC = () => {
         <TouchableOpacity
           style={[styles.button, isExporting && styles.disabledButton]}
           onPress={handleExportCSV}
-          disabled={isExporting || !isPremium}
+          disabled={isExporting || !isSubscribed}
           testID="export-csv-button"
         >
           <Text style={styles.buttonText}>Export CSV</Text>
@@ -76,7 +76,7 @@ const ExportManager: React.FC = () => {
         <TouchableOpacity
           style={[styles.button, isExporting && styles.disabledButton]}
           onPress={handleExportPDF}
-          disabled={isExporting || !isPremium}
+          disabled={isExporting || !isSubscribed}
           testID="export-pdf-button"
         >
           <Text style={styles.buttonText}>Export PDF</Text>
