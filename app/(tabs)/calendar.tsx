@@ -6,7 +6,7 @@ import { useHabits } from '@/hooks/use-habits-store';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
-import { ChevronLeft, ChevronRight, Plus } from 'lucide-react-native';
+import { ChevronLeft, ChevronRight, PlusCircle } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 import { useSubscriptionStore } from '@/hooks/use-subscription-store';
 import { Alert } from 'react-native';
@@ -213,10 +213,10 @@ export default function CalendarScreen() {
           </Text>
           <Button
             title=""
-            leftIcon={<Plus size={20} color={colors.primary} />}
+            leftIcon={<PlusCircle size={20} color={colors.primary} />}
             variant="ghost"
             size="sm"
-            onPress={() => router.push('/modal?type=task')}
+            onPress={() => router.push(`/modal?type=task&dueDate=${selectedDate.toISOString()}`)}
           />
         </View>
 
@@ -258,7 +258,7 @@ export default function CalendarScreen() {
               title="Add Task"
               variant="outline"
               size="sm"
-              onPress={() => router.push('/modal?type=task')}
+              onPress={() => router.push(`/modal?type=task&dueDate=${selectedDate.toISOString()}`)}
               style={styles.addButton}
             />
           </Card>
