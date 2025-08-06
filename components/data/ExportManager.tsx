@@ -5,13 +5,13 @@ import * as Sharing from 'expo-sharing';
 import { useSubscriptionStore } from '@/hooks/use-subscription-store';
 import { useTasks } from '@/hooks/use-tasks-store';
 import { useHabitsStore } from '@/hooks/use-habits-store';
-import { useGamificationStore } from '@/hooks/use-gamification-store';
+import { useGamification } from '@/hooks/use-gamification-store';
 
 const ExportManager: React.FC = () => {
   const { isFeatureUnlocked } = useSubscriptionStore();
   const { tasks } = useTasks();
   const { habits } = useHabitsStore();
-  const { user } = useGamificationStore();
+  const { xp, level, streak } = useGamification();
   const [isExporting, setIsExporting] = useState(false);
 
   const handleExportCSV = async () => {
@@ -22,7 +22,7 @@ const ExportManager: React.FC = () => {
 
     setIsExporting(true);
     try {
-      const csvContent = convertToCSV({ tasks, habits, xp: user?.xp || 0, level: user?.level || 0, streak: user?.streak || 0 });
+      const csvContent = convertToCSV({ tasks, habits, xp, level, streak });
       const fileUri = `${FileSystem.documentDirectory}stride_data.csv`;
       await FileSystem.writeAsStringAsync(fileUri, csvContent);
       await Sharing.shareAsync(fileUri, { mimeType: 'text/csv', dialogTitle: 'Share Stride Data CSV' });

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import createContextHook from '@nkzw/create-context-hook';
 import { SubscriptionPlan, PurchaseResult, TrialStatus, GraceDayAction } from '@/types';
-import { useAuth } from './use-auth-store';
+import { useAuthStore } from './use-auth-store';
 
 const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
   {
@@ -76,7 +76,7 @@ export const [SubscriptionProvider, useSubscriptionStore] = createContextHook(()
   const [plans] = useState<SubscriptionPlan[]>(SUBSCRIPTION_PLANS);
   const [graceDayActions, setGraceDayActions] = useState<GraceDayAction[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const { user, updateUser } = useAuth();
+  const { user, updateUser } = useAuthStore();
 
   useEffect(() => {
     const loadGraceDayActions = async () => {

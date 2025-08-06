@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, ScrollView, Alert } from 'react-native';
 import { useTheme } from '@/hooks/use-theme';
-import { useAuth } from '@/hooks/use-auth-store';
+import { useAuthStore } from '@/hooks/use-auth-store';
 import { useSubscriptionStore } from '@/hooks/use-subscription-store';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -19,7 +19,7 @@ import {
 
 export default function SubscriptionScreen() {
   const { colors } = useTheme();
-  const { user } = useAuth();
+  const { user } = useAuthStore();
   const { 
     plans, 
     getTrialStatus, 
@@ -251,7 +251,6 @@ export default function SubscriptionScreen() {
         variant="outline"
         onPress={handleRestorePurchases}
         style={styles.restoreButton}
-
       />
 
       {/* Features Highlight */}

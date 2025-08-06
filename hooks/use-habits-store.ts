@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import createContextHook from '@nkzw/create-context-hook';
 import { Habit, CompletionRecord, Frequency } from '@/types';
-import { useAuth } from './use-auth-store';
+import { useAuthStore } from './use-auth-store';
 
 // Sample habits for new users
 const sampleHabits: Omit<Habit, 'id' | 'userId' | 'createdAt' | 'updatedAt' | 'completionHistory'>[] = [
@@ -32,7 +32,7 @@ const sampleHabits: Omit<Habit, 'id' | 'userId' | 'createdAt' | 'updatedAt' | 'c
 export const [HabitsProvider, useHabitsStore] = createContextHook(() => {
   const [habits, setHabits] = useState<Habit[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const { user } = useAuth();
+  const { user } = useAuthStore();
 
   useEffect(() => {
     const loadHabits = async () => {
