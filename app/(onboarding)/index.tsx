@@ -121,13 +121,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: colors.primary,
+    color: colors.primary as string,
     textAlign: 'center',
     marginBottom: 10
   },
   subtitle: {
     fontSize: 16,
-    color: colors.text.secondary,
+    color: colors.text.secondary as string,
     textAlign: 'center',
     marginBottom: 40
   },
@@ -137,26 +137,26 @@ const styles = StyleSheet.create({
   question: {
     fontSize: 20,
     fontWeight: '600',
-    color: colors.text.primary,
+    color: colors.text.primary as string,
     marginBottom: 20,
     textAlign: 'center'
   },
   option: {
     padding: 15,
-    backgroundColor: colors.card,
+    backgroundColor: colors.card as string,
     borderRadius: 10,
     marginBottom: 10,
     alignItems: 'center'
   },
   selectedOption: {
-    backgroundColor: colors.primary,
+    backgroundColor: colors.primary as string,
   },
   optionText: {
     fontSize: 16,
     color: colors.text.primary
   },
   selectedOptionText: {
-    color: colors.background,
+    color: colors.background as string,
     fontWeight: 'bold'
   },
   skipButton: {
