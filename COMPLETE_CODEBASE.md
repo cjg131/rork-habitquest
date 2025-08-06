@@ -1,4 +1,4 @@
-# HabitQuest - Complete Codebase
+# Stride - Complete Codebase
 
 ## Project Structure
 ```

@@ -1,6 +1,6 @@
-# HabitQuest
+# Stride
 
-A comprehensive habit tracking and productivity app built with React Native and Expo. HabitQuest combines habit tracking, task management, Pomodoro timer, and gamification elements to help users build better habits and stay productive.
+A comprehensive habit tracking and productivity app built with React Native and Expo. Stride combines habit tracking, task management, Pomodoro timer, and gamification elements to help users build better habits and stay productive.
 
 ## Features
 
@@ -48,8 +48,8 @@ A comprehensive habit tracking and productivity app built with React Native and 
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/rork-habitquest.git
-cd rork-habitquest
+git clone https://github.com/yourusername/rork-stride.git
+cd rork-stride
 ```
 
 2. Install dependencies:
@@ -145,7 +145,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 If you encounter any issues or have questions:
 
-1. Check the [Issues](https://github.com/yourusername/rork-habitquest/issues) page
+1. Check the [Issues](https://github.com/yourusername/rork-stride/issues) page
 2. Create a new issue if your problem isn't already reported
 3. Provide detailed information about the issue
 
@@ -166,4 +166,4 @@ If you encounter any issues or have questions:
 
 ---
 
-**HabitQuest** - Transform your habits, transform your life! 🚀
+**Stride** - Transform your habits, transform your life! 🚀
