@@ -7,6 +7,9 @@ import { Card } from '@/components/ui/Card';
 import { Avatar } from '@/components/ui/Avatar';
 import { Button } from '@/components/ui/Button';
 import { useRouter } from 'expo-router';
+import { useOfflineSync } from '@/hooks/use-offline-sync';
+import OfflineBanner from '@/components/offline/OfflineBanner';
+import IntegrationManager from '@/components/integrations/IntegrationManager';
 import { 
   Bell, 
   Clock, 
@@ -24,6 +27,7 @@ export default function SettingsScreen() {
   const router = useRouter();
   const { user, signOut } = useAuth();
   const { settings, updateSettings } = useAppSettings();
+  const { unsyncedChangesCount } = useOfflineSync();
 
   const handleSignOut = async () => {
     await signOut();
@@ -101,6 +105,7 @@ export default function SettingsScreen() {
       style={[styles.container, { backgroundColor: colors.background }]}
       contentContainerStyle={styles.contentContainer}
     >
+      <OfflineBanner unsyncedCount={unsyncedChangesCount} />
       <Card style={styles.profileCard}>
         <View style={styles.profileHeader}>
           <Avatar
@@ -179,6 +184,21 @@ export default function SettingsScreen() {
           isSwitch={false}
           value={undefined}
         />
+        
+        <View style={[styles.divider, { backgroundColor: colors.border }]} />
+        
+        <SettingItem
+          icon={<SettingsIcon size={20} color={colors.primary} />}
+          title="Frictionless Mode"
+          description="Minimize animations for quicker interactions"
+          action={() => {
+            updateSettings({
+              frictionlessMode: !settings.frictionlessMode
+            });
+          }}
+          isSwitch={true}
+          value={settings.frictionlessMode}
+        />
       </Card>
       
       <Text style={[styles.sectionTitle, { color: colors.text.secondary }]}>
@@ -202,6 +222,28 @@ export default function SettingsScreen() {
           title="Help & Support"
           description="FAQs, contact support, report a bug"
           action={() => router.push('/modal?type=help-support')}
+          isSwitch={false}
+          value={undefined}
+        />
+        
+        <View style={[styles.divider, { backgroundColor: colors.border }]} />
+        
+        <SettingItem
+          icon={<SettingsIcon size={20} color={colors.primary} />}
+          title="Integrations"
+          description="Connect with Apple Health and Zapier (Premium)"
+          action={() => router.push('/modal?type=integrations')}
+          isSwitch={false}
+          value={undefined}
+        />
+        
+        <View style={[styles.divider, { backgroundColor: colors.border }]} />
+        
+        <SettingItem
+          icon={<SettingsIcon size={20} color={colors.primary} />}
+          title="Delete Account"
+          description="Schedule account deletion with grace period"
+          action={() => router.push('/account-deletion')}
           isSwitch={false}
           value={undefined}
         />
