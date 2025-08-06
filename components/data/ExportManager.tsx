@@ -57,8 +57,7 @@ const ExportManager: React.FC = () => {
     const taskRows = data.tasks.map((task: any) => `Task,"${task.title}",${task.completed ? 'Completed' : 'Pending'},"${task.description || ''}"`);
     const habitRows = data.habits.map((habit: any) => `Habit,"${habit.name}",${habit.completed ? 'Completed' : 'Pending'},Streak: ${habit.streak}`);
     const gamificationRows = [`Gamification,XP: ${data.xp},Level: ${data.level},Streak: ${data.streak}`];
-    return [...headers, ...taskRows, ...habitRows, ...gamificationRows].join('
-');
+    return [...headers, ...taskRows, ...habitRows, ...gamificationRows].join('\n');
   };
 
   return (
