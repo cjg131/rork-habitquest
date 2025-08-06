@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text, ScrollView, Switch as RNSwitch, TouchableOpacity, Share as RNShare, Alert, Platform } from 'react-native';
 import { useTheme } from '@/hooks/use-theme';
-import { useAuth } from '@/hooks/use-auth-store';
+import { useAuthStore } from '@/hooks/use-auth-store';
 import { useAppSettings } from '@/hooks/use-app-settings';
 import { Card } from '@/components/ui/Card';
 import { Avatar } from '@/components/ui/Avatar';
@@ -27,7 +27,7 @@ import {
 export default function SettingsScreen() {
   const { colors } = useTheme();
   const router = useRouter();
-  const { user, signOut } = useAuth();
+  const { user, signOut } = useAuthStore();
   const { settings, updateSettings } = useAppSettings();
   const { unsyncedChangesCount } = useOfflineSync();
 
@@ -191,15 +191,18 @@ export default function SettingsScreen() {
         
         <SettingItem
           icon={<SettingsIcon size={20} color={colors.primary} />}
-          title="Frictionless Mode"
-          description="Minimize animations for quicker interactions"
+          title="Reduce Motion"
+          description="Minimize animations for accessibility"
           action={() => {
             updateSettings({
-              frictionlessMode: !settings.frictionlessMode
+              accessibility: {
+                ...settings.accessibility,
+                reduceMotion: !settings.accessibility.reduceMotion
+              }
             });
           }}
           isSwitch={true}
-          value={settings.frictionlessMode}
+          value={settings.accessibility.reduceMotion}
         />
       </Card>
       

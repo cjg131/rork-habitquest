@@ -2,27 +2,27 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Platform } from 'react-native';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
-import { useSubscription } from '@/hooks/use-subscription-store';
+import { useSubscriptionStore } from '@/hooks/use-subscription-store';
 import { useTasks } from '@/hooks/use-tasks-store';
-import { useHabits } from '@/hooks/use-habits-store';
-import { useGamification } from '@/hooks/use-gamification-store';
+import { useHabitsStore } from '@/hooks/use-habits-store';
+import { useGamificationStore } from '@/hooks/use-gamification-store';
 
 const ExportManager: React.FC = () => {
-  const { isSubscribed } = useSubscription();
+  const { isFeatureUnlocked } = useSubscriptionStore();
   const { tasks } = useTasks();
-  const { habits } = useHabits();
-  const { currentXP, currentLevel, currentStreak } = useGamification();
+  const { habits } = useHabitsStore();
+  const { user } = useGamificationStore();
   const [isExporting, setIsExporting] = useState(false);
 
   const handleExportCSV = async () => {
-    if (!isSubscribed) {
+    if (!isFeatureUnlocked('data-export')) {
       Alert.alert('Premium Feature', 'Data export is available for Premium users only. Upgrade to unlock this feature.');
       return;
     }
 
     setIsExporting(true);
     try {
-      const csvContent = convertToCSV({ tasks, habits, xp: currentXP, level: currentLevel, streak: currentStreak });
+      const csvContent = convertToCSV({ tasks, habits, xp: user?.xp || 0, level: user?.level || 0, streak: user?.streak || 0 });
       const fileUri = `${FileSystem.documentDirectory}stride_data.csv`;
       await FileSystem.writeAsStringAsync(fileUri, csvContent);
       await Sharing.shareAsync(fileUri, { mimeType: 'text/csv', dialogTitle: 'Share Stride Data CSV' });
@@ -35,7 +35,7 @@ const ExportManager: React.FC = () => {
   };
 
   const handleExportPDF = async () => {
-    if (!isSubscribed) {
+    if (!isFeatureUnlocked('data-export')) {
       Alert.alert('Premium Feature', 'Data export is available for Premium users only. Upgrade to unlock this feature.');
       return;
     }
@@ -68,7 +68,7 @@ const ExportManager: React.FC = () => {
         <TouchableOpacity
           style={[styles.button, isExporting && styles.disabledButton]}
           onPress={handleExportCSV}
-          disabled={isExporting || !isSubscribed}
+          disabled={isExporting || !isFeatureUnlocked('data-export')}
           testID="export-csv-button"
         >
           <Text style={styles.buttonText}>Export CSV</Text>
@@ -76,7 +76,7 @@ const ExportManager: React.FC = () => {
         <TouchableOpacity
           style={[styles.button, isExporting && styles.disabledButton]}
           onPress={handleExportPDF}
-          disabled={isExporting || !isSubscribed}
+          disabled={isExporting || !isFeatureUnlocked('data-export')}
           testID="export-pdf-button"
         >
           <Text style={styles.buttonText}>Export PDF</Text>

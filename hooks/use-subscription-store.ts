@@ -72,7 +72,7 @@ const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
   }
 ];
 
-export const [SubscriptionProvider, useSubscription] = createContextHook(() => {
+export const [SubscriptionProvider, useSubscriptionStore] = createContextHook(() => {
   const [plans] = useState<SubscriptionPlan[]>(SUBSCRIPTION_PLANS);
   const [graceDayActions, setGraceDayActions] = useState<GraceDayAction[]>([]);
   const [loading, setLoading] = useState<boolean>(true);

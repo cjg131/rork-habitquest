@@ -21,7 +21,7 @@ const mockUser: User = {
   createdAt: new Date(),
 };
 
-export const [AuthProvider, useAuth] = createContextHook(() => {
+export const [AuthProvider, useAuthStore] = createContextHook(() => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);

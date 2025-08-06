@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Text, ScrollView, Alert } from 'react-native';
 import { useTheme } from '@/hooks/use-theme';
 import { useAuth } from '@/hooks/use-auth-store';
-import { useSubscription } from '@/hooks/use-subscription-store';
+import { useSubscriptionStore } from '@/hooks/use-subscription-store';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
@@ -26,7 +26,7 @@ export default function SubscriptionScreen() {
     purchasePlan, 
     getAdjustedPrice,
     loading: subscriptionLoading 
-  } = useSubscription();
+  } = useSubscriptionStore();
   const [loading, setLoading] = useState<boolean>(false);
 
   const getCurrentPlan = () => {
@@ -251,7 +251,7 @@ export default function SubscriptionScreen() {
         variant="outline"
         onPress={handleRestorePurchases}
         style={styles.restoreButton}
-        // icon prop not supported in Button component
+
       />
 
       {/* Features Highlight */}

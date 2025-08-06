@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, FlatList } from 'react-native';
-import { useSubscription } from '@/hooks/use-subscription-store';
-import { useHabits } from '@/hooks/use-habits-store';
+import { useSubscriptionStore } from '@/hooks/use-subscription-store';
+import { useHabitsStore } from '@/hooks/use-habits-store';
 import { Switch } from '@/components/ui/Switch';
 
 interface Integration {
@@ -18,8 +18,8 @@ interface HabitIntegration {
 }
 
 const IntegrationManager = () => {
-  const { isFeatureUnlocked } = useSubscription();
-  const { habits } = useHabits();
+  const { isFeatureUnlocked } = useSubscriptionStore();
+  const { habits } = useHabitsStore();
   const [integrations, setIntegrations] = useState<Integration[]>([
     { id: 'appleHealth', name: 'Apple Health', description: 'Sync fitness and health data', connected: false },
     { id: 'zapier', name: 'Zapier', description: 'Automate workflows with other apps', connected: false },
@@ -94,7 +94,7 @@ const IntegrationManager = () => {
                 <Switch
                   value={isLinked}
                   onValueChange={() => toggleHabitIntegration(habit.id, item.id)}
-                  testID={`switch-${habit.id}-${item.id}`}
+                  testId={`switch-${habit.id}-${item.id}`}
                 />
               </View>
             );

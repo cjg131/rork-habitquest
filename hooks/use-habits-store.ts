@@ -29,7 +29,7 @@ const sampleHabits: Omit<Habit, 'id' | 'userId' | 'createdAt' | 'updatedAt' | 'c
   },
 ];
 
-export const [HabitsProvider, useHabits] = createContextHook(() => {
+export const [HabitsProvider, useHabitsStore] = createContextHook(() => {
   const [habits, setHabits] = useState<Habit[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const { user } = useAuth();
