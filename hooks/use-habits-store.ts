@@ -331,3 +331,6 @@ export const [HabitsProvider, useHabitsStore] = createContextHook(() => {
     markHabitIncomplete,
   };
 });
+
+// Add a direct export for useHabits to match the expected usage in components
+export const useHabits = useHabitsStore;
