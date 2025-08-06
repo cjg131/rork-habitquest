@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { ChevronLeft, ChevronRight, Plus } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
-import { useSubscription } from '@/hooks/use-subscription-store';
+import { useSubscriptionStore } from '@/hooks/use-subscription-store';
 import { Alert } from 'react-native';
 
 const { width } = Dimensions.get('window');
@@ -19,7 +19,8 @@ export default function CalendarScreen() {
   const router = useRouter();
   const { tasks } = useTasks();
   const { habits } = useHabits();
-  const { isPremium } = useSubscription();
+  const subscription = useSubscriptionStore();
+  const isPremium = subscription.isFeatureUnlocked('ai-calendar');
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [viewMode, setViewMode] = useState<'day' | 'week' | 'month'>('month');
