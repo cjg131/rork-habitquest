@@ -11,6 +11,7 @@ import { TasksProvider } from "@/hooks/use-tasks-store";
 import { HabitsProvider } from "@/hooks/use-habits-store";
 import { PomodoroProvider } from "@/hooks/use-pomodoro-store";
 import { GamificationProvider } from "@/hooks/use-gamification-store";
+import { trpc, trpcClient } from "@/lib/trpc";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -54,24 +55,26 @@ export default function RootLayout() {
   }, []);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <AuthProvider>
-          <AppSettingsProvider>
-            <OnboardingProvider>
-              <TasksProvider>
-                <HabitsProvider>
-                  <PomodoroProvider>
-                    <GamificationProvider>
-                      <RootLayoutNav />
-                    </GamificationProvider>
-                  </PomodoroProvider>
-                </HabitsProvider>
-              </TasksProvider>
-            </OnboardingProvider>
-          </AppSettingsProvider>
-        </AuthProvider>
-      </GestureHandlerRootView>
-    </QueryClientProvider>
+    <trpc.Provider client={trpcClient} queryClient={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <AuthProvider>
+            <AppSettingsProvider>
+              <OnboardingProvider>
+                <TasksProvider>
+                  <HabitsProvider>
+                    <PomodoroProvider>
+                      <GamificationProvider>
+                        <RootLayoutNav />
+                      </GamificationProvider>
+                    </PomodoroProvider>
+                  </HabitsProvider>
+                </TasksProvider>
+              </OnboardingProvider>
+            </AppSettingsProvider>
+          </AuthProvider>
+        </GestureHandlerRootView>
+      </QueryClientProvider>
+    </trpc.Provider>
   );
 }
