@@ -99,13 +99,13 @@ export default function OnboardingScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: themeColors.background[themeColors.colorScheme] }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: themeColors.background }]}>
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
-      <Text style={[styles.title, { color: themeColors.primary[themeColors.colorScheme] }]}>Let’s Get Started</Text>
-      <Text style={[styles.subtitle, { color: themeColors.secondary[themeColors.colorScheme] }]}>Answer a few questions to personalize your experience.</Text>
+      <Text style={[styles.title, { color: themeColors.primary }]}>Let’s Get Started</Text>
+      <Text style={[styles.subtitle, { color: themeColors.secondary }]}>Answer a few questions to personalize your experience.</Text>
       {renderQuestion()}
       <View style={styles.progressContainer}>
-        <Text style={[styles.progressText, { color: themeColors.secondary[themeColors.colorScheme] }]}>Step {step} of 3</Text>
+        <Text style={[styles.progressText, { color: themeColors.secondary }]}>Step {step} of 3</Text>
       </View>
     </SafeAreaView>
   );
@@ -144,13 +144,13 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   selectedOption: {
-    backgroundColor: themeColors.primary[themeColors.colorScheme],
+    backgroundColor: themeColors.primary,
   },
   optionText: {
     fontSize: 16,
   },
   selectedOptionText: {
-    color: themeColors.background[themeColors.colorScheme],
+    color: themeColors.background,
     fontWeight: 'bold'
   },
   skipButton: {
