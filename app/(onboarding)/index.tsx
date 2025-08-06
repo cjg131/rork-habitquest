@@ -7,7 +7,7 @@ import { colors } from '@/constants/colors';
 import { StatusBar } from 'expo-status-bar';
 
 export default function OnboardingScreen() {
-  const { colors: themeColors } = useTheme();
+  const theme = useTheme();
   const router = useRouter();
   const { updateOnboardingState, completeOnboarding } = useOnboarding();
   const [step, setStep] = useState(1);
@@ -99,7 +99,7 @@ export default function OnboardingScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: themeColors.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
       <Text style={styles.title}>Let’s Get Started</Text>
       <Text style={styles.subtitle}>Answer a few questions to personalize your experience.</Text>
@@ -120,13 +120,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: themeColors.primary,
+    color: colors.primary,
     textAlign: 'center',
     marginBottom: 10
   },
   subtitle: {
     fontSize: 16,
-    color: themeColors.text.secondary,
+    color: colors.textSecondary,
     textAlign: 'center',
     marginBottom: 40
   },
@@ -136,26 +136,26 @@ const styles = StyleSheet.create({
   question: {
     fontSize: 20,
     fontWeight: '600',
-    color: themeColors.text.primary,
+    color: colors.textPrimary,
     marginBottom: 20,
     textAlign: 'center'
   },
   option: {
     padding: 15,
-    backgroundColor: themeColors.card,
+    backgroundColor: colors.cardBackground,
     borderRadius: 10,
     marginBottom: 10,
     alignItems: 'center'
   },
   selectedOption: {
-    backgroundColor: themeColors.primary,
+    backgroundColor: colors.primary,
   },
   optionText: {
     fontSize: 16,
-    color: themeColors.text.primary,
+    color: colors.textPrimary,
   },
   selectedOptionText: {
-    color: themeColors.background,
+    color: colors.background,
     fontWeight: 'bold'
   },
   skipButton: {
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
   },
   skipButtonText: {
     fontSize: 16,
-    color: themeColors.text.secondary,
+    color: colors.textSecondary,
   },
   progressContainer: {
     alignItems: 'center',
@@ -173,6 +173,6 @@ const styles = StyleSheet.create({
   },
   progressText: {
     fontSize: 14,
-    color: themeColors.text.secondary,
+    color: colors.textSecondary,
   }
 });
