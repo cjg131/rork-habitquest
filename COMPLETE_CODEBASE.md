@@ -782,6 +782,9 @@ export interface AppSettings {
 - **Offline Sync**: Full offline mode with queued changes that sync when online
 - **Account Deletion**: Customizable grace period for account deletion with recovery option
 - **Cross-Platform**: iOS, Android, and Web support with React Native Web compatibility
+- **Accessibility**: Support for device-wide font scaling, colorblind modes, and reduced motion
+- **UX Polish**: Apple-style design with rounded corners, gradients, and smooth transitions
+- **User Privacy**: No social feeds or public leaderboards, prioritizing user control and privacy
 
 ## Tech Stack
 
