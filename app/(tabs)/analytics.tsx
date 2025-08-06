@@ -4,7 +4,7 @@ import { useTheme } from '@/hooks/use-theme';
 import { useTasks } from '@/hooks/use-tasks-store';
 import { useHabits } from '@/hooks/use-habits-store';
 import { useGamification } from '@/hooks/use-gamification-store';
-import { useSubscription } from '@/hooks/use-subscription-store';
+import { useSubscriptionStore } from '@/hooks/use-subscription-store';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { BarChart, PieChart } from 'react-native-chart-kit';
@@ -34,7 +34,7 @@ const AnalyticsScreen: React.FC = () => {
   const { colors } = useTheme();
   const { tasks } = useTasks();
   const { habits } = useHabits();
-  const { xp, level, streak } = useGamification();
+  const { badges } = useGamification();
   const { isPremium } = useSubscriptionStore();
   const [exporting, setExporting] = useState(false);
 
@@ -84,10 +84,7 @@ const AnalyticsScreen: React.FC = () => {
       `Task Completion Rate,${completionRate.toFixed(2)}%`,
       `Total Habits,${habits.length}`,
       `Habit Completion Rate,${habitCompletionRate.toFixed(2)}%`,
-      `Total Habit Completions,${totalHabitCompletions}`,
-      `XP,${xp}`,
-      `Level,${level}`,
-      `Streak,${streak}`
+      `Total Habit Completions,${totalHabitCompletions}`
     ];
     return [...headers, ...rows].join('\n');
   };
@@ -107,6 +104,8 @@ const AnalyticsScreen: React.FC = () => {
           showValuesOnTopOfBars={true}
           fromZero={true}
           style={styles.chart}
+          yAxisLabel=""
+          yAxisSuffix=""
         />
       </Card>
 
@@ -128,16 +127,8 @@ const AnalyticsScreen: React.FC = () => {
         <Text style={[styles.statsTitle, { color: colors.text.primary }]}>Gamification Stats</Text>
         <View style={styles.statsRow}>
           <View style={styles.statItem}>
-            <Text style={[styles.statValue, { color: colors.text.primary }]}>{xp}</Text>
-            <Text style={[styles.statLabel, { color: colors.text.secondary }]}>XP</Text>
-          </View>
-          <View style={styles.statItem}>
-            <Text style={[styles.statValue, { color: colors.text.primary }]}>{level}</Text>
-            <Text style={[styles.statLabel, { color: colors.text.secondary }]}>Level</Text>
-          </View>
-          <View style={styles.statItem}>
-            <Text style={[styles.statValue, { color: colors.text.primary }]}>{streak}</Text>
-            <Text style={[styles.statLabel, { color: colors.text.secondary }]}>Streak</Text>
+            <Text style={[styles.statValue, { color: colors.text.primary }]}>{badges.length}</Text>
+            <Text style={[styles.statLabel, { color: colors.text.secondary }]}>Badges</Text>
           </View>
         </View>
       </Card>
