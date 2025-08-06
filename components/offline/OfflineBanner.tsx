@@ -3,7 +3,8 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useOfflineSync } from '@/hooks/use-offline-sync';
 
 const OfflineBanner = ({ unsyncedCount }: { unsyncedCount: number }) => {
-  const { retrySync } = useOfflineSync();
+  // retrySync is not available in useOfflineSync
+  // const { retrySync } = useOfflineSync();
   if (unsyncedCount === 0) return null;
 
   return (
@@ -11,7 +12,7 @@ const OfflineBanner = ({ unsyncedCount }: { unsyncedCount: number }) => {
       <Text style={styles.text}>
         {unsyncedCount} unsynced change(s). Changes will sync when online.
       </Text>
-      <TouchableOpacity style={styles.retryButton} onPress={retrySync}>
+      <TouchableOpacity style={styles.retryButton} onPress={() => console.log('Retry Sync is not implemented yet')}>
         <Text style={styles.retryText}>Retry Sync</Text>
       </TouchableOpacity>
     </View>

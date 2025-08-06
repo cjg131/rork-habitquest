@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, ScrollView, TouchableOpacity } from 'react-nati
 import { useTheme } from '@/hooks/use-theme';
 import { useAuth } from '@/hooks/use-auth-store';
 import { useTasks } from '@/hooks/use-tasks-store';
-import { useHabits } from '@/hooks/use-habits-store';
+import { useHabitsStore } from '@/hooks/use-habits-store';
 import { usePomodoro } from '@/hooks/use-pomodoro-store';
 import { LevelProgress } from '@/components/dashboard/LevelProgress';
 import { StatsCard } from '@/components/dashboard/StatsCard';
@@ -20,7 +20,7 @@ export default function DashboardScreen() {
   const router = useRouter();
   const { user } = useAuth();
   const { tasks, updateTask } = useTasks();
-  const { habits, markHabitComplete, markHabitIncomplete } = useHabits();
+  const { habits, markHabitComplete, markHabitIncomplete } = useHabitsStore();
   const { startSession } = usePomodoro();
   const [frictionlessMode, setFrictionlessMode] = useState(false);
   const [lastAction, setLastAction] = useState<{ type: string, id: string, previousState: boolean } | null>(null);
@@ -65,9 +65,9 @@ export default function DashboardScreen() {
   // Calculate stats
   const completedTasks = tasks.filter(task => task.completed).length;
   const totalTasks = tasks.length;
-  const completedHabits = habits.filter(habit => isHabitCompletedToday(habit)).length;
+  const completedHabits = habits.filter((habit: Habit) => isHabitCompletedToday(habit)).length;
   const totalHabits = habits.length;
-  const longestStreak = habits.reduce((max, habit) => Math.max(max, habit.streak), 0);
+  const longestStreak = habits.reduce((max: number, habit: Habit) => Math.max(max, habit.streak || 0), 0);
 
   const handleToggleTask = (taskId: string, completed: boolean) => {
     setLastAction({ type: 'task', id: taskId, previousState: !completed });

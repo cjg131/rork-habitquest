@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Platform } from
 import { useRouter } from 'expo-router';
 import { useTheme } from '@/hooks/use-theme';
 import { useOnboarding } from '@/hooks/use-onboarding-store';
-import { COLORS } from '@/constants/colors';
+import { colors } from '@/constants/colors';
 import { StatusBar } from 'expo-status-bar';
 
 export default function OnboardingScreen() {
@@ -26,7 +26,7 @@ export default function OnboardingScreen() {
         trackHabits: answer === 'Habits' || answer === 'All',
         trackTasks: answer === 'Tasks' || answer === 'All',
         trackPomodoro: answer === 'Pomodoro/Focus' || answer === 'All',
-        reminderFrequency: answers.reminders || answer,
+        reminderFrequency: (answers.reminders || answer) as 'none' | 'daily' | 'weekly' | 'custom',
         goal: answers.goal || answer
       });
       completeOnboarding().then(() => {
@@ -121,13 +121,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: COLORS.primary,
+    color: colors.primary,
     textAlign: 'center',
     marginBottom: 10
   },
   subtitle: {
     fontSize: 16,
-    color: COLORS.textSecondary,
+    color: colors.text.secondary,
     textAlign: 'center',
     marginBottom: 40
   },
@@ -137,26 +137,26 @@ const styles = StyleSheet.create({
   question: {
     fontSize: 20,
     fontWeight: '600',
-    color: COLORS.textPrimary,
+    color: colors.text.primary,
     marginBottom: 20,
     textAlign: 'center'
   },
   option: {
     padding: 15,
-    backgroundColor: COLORS.cardBackground,
+    backgroundColor: colors.card,
     borderRadius: 10,
     marginBottom: 10,
     alignItems: 'center'
   },
   selectedOption: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
   },
   optionText: {
     fontSize: 16,
-    color: COLORS.textPrimary
+    color: colors.text.primary
   },
   selectedOptionText: {
-    color: COLORS.background,
+    color: colors.background,
     fontWeight: 'bold'
   },
   skipButton: {
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
   },
   skipButtonText: {
     fontSize: 16,
-    color: COLORS.textSecondary
+    color: colors.text.secondary
   },
   progressContainer: {
     alignItems: 'center',
@@ -174,6 +174,6 @@ const styles = StyleSheet.create({
   },
   progressText: {
     fontSize: 14,
-    color: COLORS.textSecondary
+    color: colors.text.secondary
   }
 });
