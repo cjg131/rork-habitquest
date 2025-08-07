@@ -1,7 +1,7 @@
 import { Tabs } from "expo-router";
 import React from "react";
 import { useTheme } from "@/hooks/use-theme";
-import { Home, Calendar, Clock, CheckCircle, Settings, CreditCard } from "lucide-react-native";
+import { Home, Calendar, Clock, CheckCircle, Settings, CreditCard, DollarSign } from "lucide-react-native";
 
 export default function TabLayout() {
   const { colors } = useTheme();
@@ -65,6 +65,13 @@ export default function TabLayout() {
         options={{
           title: "Premium",
           tabBarIcon: ({ color }) => <CreditCard size={24} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="payment"
+        options={{
+          title: "Payment",
+          tabBarIcon: ({ color }) => <DollarSign size={24} color={color} />,
         }}
       />
       <Tabs.Screen
