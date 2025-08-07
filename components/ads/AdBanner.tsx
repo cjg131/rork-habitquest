@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import { useTheme } from '@/hooks/use-theme';
 import { useSubscriptionStore } from '@/hooks/use-subscription-store';
-import { Link } from 'lucide-react-native';
+import { ExternalLink } from 'lucide-react-native';
 
 interface AdBannerProps {
   style?: any;
@@ -23,7 +23,7 @@ export function AdBanner({ style }: AdBannerProps) {
   return (
     <View style={[styles.container, { backgroundColor: colors.card }, style]} testID="ad-banner">
       <TouchableOpacity style={styles.adContent}>
-        <Link size={16} color={colors.text.secondary} />
+        <ExternalLink size={16} color={colors.text.secondary} />
         <Text style={[styles.adText, { color: colors.text.secondary }]}>
           Advertisement
         </Text>
