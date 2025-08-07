@@ -1,4 +1,4 @@
-import { protectedProcedure } from '.././../create-context';
+import { protectedProcedure } from '../../create-context';
 import { z } from 'zod';
 import Stripe from 'stripe';
 
@@ -30,26 +30,13 @@ export const createPaymentIntentProcedure = protectedProcedure
   .mutation(async ({ input, ctx }: { input: { amount: number; currency: string }; ctx: any }) => {
     try {
       // Create or retrieve customer
-const customer = await stripe.customers.create({
-        email: ctx.user.email,
-        name: ctx.user.name || undefined,
-      });
+const customer = await stripe.customers.create();
 
       // Create ephemeral key
-const ephemeralKey = await stripe.ephemeralKeys.create(
-        { customer: customer.id },
-        { apiVersion: '2022-11-15' }
-      );
+const ephemeralKey = await stripe.ephemeralKeys.create();
 
       // Create payment intent
-const paymentIntent = await stripe.paymentIntents.create({
-        amount: input.amount,
-        currency: input.currency,
-        customer: customer.id,
-        automatic_payment_methods: {
-          enabled: true,
-        },
-      });
+const paymentIntent = await stripe.paymentIntents.create();
 
       return {
         paymentIntent: paymentIntent.client_secret,
