@@ -1,4 +1,4 @@
-import { protectedProcedure } from '../../create-context';
+import { protectedProcedure } from '../../../create-context';
 import { z } from 'zod';
 import Stripe from 'stripe';
 
