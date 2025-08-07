@@ -1,7 +1,7 @@
 import { Tabs } from "expo-router";
 import React from "react";
 import { useTheme } from "@/hooks/use-theme";
-import { House, CalendarDays, Clock, CheckCircle2, Settings, CreditCard, DollarSign } from "lucide-react-native";
+import { Home, Calendar, Clock, CheckCircle, Settings2, CreditCard, DollarSign } from "lucide-react-native";
 
 export default function TabLayout() {
   const { colors } = useTheme();
@@ -29,21 +29,21 @@ export default function TabLayout() {
         name="index"
         options={{
           title: "Dashboard",
-          tabBarIcon: ({ color }) => <House size={24} color={color} />,
+          tabBarIcon: ({ color }) => <Home size={24} color={color} />,
         }}
       />
       <Tabs.Screen
         name="habits"
         options={{
           title: "Habits",
-          tabBarIcon: ({ color }) => <CheckCircle2 size={24} color={color} />,
+          tabBarIcon: ({ color }) => <CheckCircle size={24} color={color} />,
         }}
       />
       <Tabs.Screen
         name="tasks"
         options={{
           title: "Tasks",
-          tabBarIcon: ({ color }) => <House size={24} color={color} />,
+          tabBarIcon: ({ color }) => <CheckCircle size={24} color={color} />,
         }}
       />
       <Tabs.Screen
@@ -57,7 +57,7 @@ export default function TabLayout() {
         name="calendar"
         options={{
           title: "Calendar",
-          tabBarIcon: ({ color }) => <CalendarDays size={24} color={color} />,
+          tabBarIcon: ({ color }) => <Calendar size={24} color={color} />,
         }}
       />
       <Tabs.Screen
@@ -78,7 +78,7 @@ export default function TabLayout() {
         name="settings"
         options={{
           title: "Settings",
-          tabBarIcon: ({ color }) => <Settings size={24} color={color} />,
+          tabBarIcon: ({ color }) => <Settings2 size={24} color={color} />,
         }}
       />
     </Tabs>
