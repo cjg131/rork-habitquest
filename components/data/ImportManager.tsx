@@ -5,7 +5,7 @@ import { useTheme } from '@/hooks/use-theme';
 import { useSubscriptionStore } from '@/hooks/use-subscription-store';
 import { useTasks } from '@/hooks/use-tasks-store';
 import { Button } from '@/components/ui/Button';
-import { Upload } from 'lucide-react-native';
+import { UploadCloud } from 'lucide-react-native';
 
 interface ImportManagerProps {
   style?: any;
@@ -95,7 +95,7 @@ export function ImportManager({ style }: ImportManagerProps) {
         onPress={handleImportData}
         disabled={importing || !subscription.isFeatureUnlocked('data-export') || Platform.OS === 'web'}
         style={styles.button}
-        leftIcon={<Upload size={20} color="#fff" />}
+        leftIcon={<UploadCloud size={20} color="#fff" />}
       />
       {!subscription.isFeatureUnlocked('data-export') && (
         <Text style={[styles.premiumNotice, { color: colors.text.secondary }]}>

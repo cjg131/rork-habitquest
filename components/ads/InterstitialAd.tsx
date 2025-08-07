@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal, Platform, Alert } from 'react-native';
 import { useTheme } from '@/hooks/use-theme';
 import { useSubscriptionStore } from '@/hooks/use-subscription-store';
-import { X, ExternalLink } from 'lucide-react-native';
+import { X, Link } from 'lucide-react-native';
 
 interface InterstitialAdProps {
   visible: boolean;
@@ -73,7 +73,7 @@ export function InterstitialAd({ visible, onClose }: InterstitialAdProps) {
           </TouchableOpacity>
 
           <View style={styles.adContent}>
-            <ExternalLink size={48} color={colors.primary} />
+            <Link size={48} color={colors.primary} />
             <Text style={[styles.adTitle, { color: colors.text.primary }]}>
               Advertisement
             </Text>
