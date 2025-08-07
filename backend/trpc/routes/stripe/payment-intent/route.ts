@@ -10,13 +10,13 @@ import Stripe from 'stripe';
 // Using mock data for now
 const stripe = {
   customers: {
-    create: async () => ({ id: 'mock_customer_id' })
+    create: async (params?: any) => ({ id: 'mock_customer_id' })
   },
   ephemeralKeys: {
-    create: async () => ({ secret: 'mock_ephemeral_key' })
+    create: async (params?: any, options?: any) => ({ secret: 'mock_ephemeral_key' })
   },
   paymentIntents: {
-    create: async () => ({ client_secret: 'mock_payment_intent_secret' })
+    create: async (params?: any) => ({ client_secret: 'mock_payment_intent_secret' })
   }
 };
 
@@ -30,13 +30,25 @@ export const createPaymentIntentProcedure = protectedProcedure
   .mutation(async ({ input, ctx }) => {
     try {
       // Create or retrieve customer
-const customer = await stripe.customers.create({});
+      const customer = await stripe.customers.create({
+        email: 'user@example.com', // In real implementation, get from ctx.user
+      });
 
       // Create ephemeral key
-const ephemeralKey = await stripe.ephemeralKeys.create({}, {});
+      const ephemeralKey = await stripe.ephemeralKeys.create(
+        { customer: customer.id },
+        { apiVersion: '2022-11-15' }
+      );
 
       // Create payment intent
-const paymentIntent = await stripe.paymentIntents.create({});
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: input.amount,
+        currency: input.currency,
+        customer: customer.id,
+        automatic_payment_methods: {
+          enabled: true,
+        },
+      });
 
       return {
         paymentIntent: paymentIntent.client_secret,
