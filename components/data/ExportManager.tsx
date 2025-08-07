@@ -79,7 +79,7 @@ export function ExportManager({ style }: ExportManagerProps) {
   const convertToCSV = () => {
     const headers = ['Category,Details'];
     const taskRows = tasks.map(task => `Task,"${task.title}, Completed: ${task.completed}"`);
-    const habitRows = habits.map(habit => `Habit,"${habit.name}, Streak: ${habit.streak}"`);
+    const habitRows = habits.map(habit => `Habit,"${habit.title || 'Unnamed Habit'}, Streak: ${habit.streak}"`);
     const gamificationRows = [
       `Gamification,"Level: ${level}, XP: ${xp}, Badges: ${badges.length}"`
     ];
