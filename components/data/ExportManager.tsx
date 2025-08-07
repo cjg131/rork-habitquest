@@ -9,6 +9,7 @@ import { useHabits } from '@/hooks/use-habits-store';
 import { useGamification } from '@/hooks/use-gamification-store';
 import { Button } from '@/components/ui/Button';
 import { Download } from 'lucide-react-native';
+import { useAuth } from '@/hooks/use-auth-store';
 
 interface ExportManagerProps {
   style?: any;
@@ -19,7 +20,10 @@ export function ExportManager({ style }: ExportManagerProps) {
   const subscription = useSubscriptionStore();
   const { tasks } = useTasks();
   const { habits } = useHabits();
-  const { level, xp, badges } = useGamification();
+  const { badges } = useGamification();
+  const { user } = useAuth();
+  const level = user?.level || 1;
+  const xp = user?.xp || 0;
   const [exporting, setExporting] = useState(false);
 
   const handleExportData = async (format: 'csv' | 'pdf') => {

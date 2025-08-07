@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/Button';
 import { BarChart, PieChart } from 'react-native-chart-kit';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
-import { DownloadCloud } from 'lucide-react-native';
+import { Download } from 'lucide-react-native';
 
 const { width } = Dimensions.get('window');
 const chartConfig = {
@@ -138,7 +138,7 @@ const AnalyticsScreen: React.FC = () => {
       <View style={styles.exportContainer}>
         <Button
           title="Export Analytics"
-          leftIcon={<DownloadCloud size={20} color="#fff" />}
+          leftIcon={<Download size={20} color="#fff" />}
           onPress={handleExportAnalytics}
           disabled={exporting || !subscription.isFeatureUnlocked('data-export')}
           style={[styles.exportButton, !subscription.isFeatureUnlocked('data-export') && styles.disabledButton]}
