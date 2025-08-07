@@ -1,7 +1,7 @@
 import { Tabs } from "expo-router";
 import React from "react";
 import { useTheme } from "@/hooks/use-theme";
-import { Home, Calendar, Clock, CheckCircle, Settings, CreditCard, DollarSign } from "lucide-react-native";
+import { Home, Calendar, Clock, CheckCircle2, Settings, CreditCard, DollarSign } from "lucide-react-native";
 
 export default function TabLayout() {
   const { colors } = useTheme();
@@ -36,7 +36,7 @@ export default function TabLayout() {
         name="habits"
         options={{
           title: "Habits",
-          tabBarIcon: ({ color }) => <CheckCircle size={24} color={color} />,
+          tabBarIcon: ({ color }) => <CheckCircle2 size={24} color={color} />,
         }}
       />
       <Tabs.Screen
