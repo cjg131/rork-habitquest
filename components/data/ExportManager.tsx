@@ -22,8 +22,9 @@ export function ExportManager({ style }: ExportManagerProps) {
   const { habits } = useHabits();
   const { badges } = useGamification();
   const { user } = useAuth();
-  const level = user?.level || 1;
-  const xp = user?.xp || 0;
+  // Removed references to level and xp as they are not in the gamification hook
+  const level = 1;
+  const xp = 0;
   const [exporting, setExporting] = useState(false);
 
   const handleExportData = async (format: 'csv' | 'pdf') => {
