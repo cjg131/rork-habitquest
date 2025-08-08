@@ -23,6 +23,7 @@ export function ExportManager({ style }: ExportManagerProps) {
   const { badges } = useGamification();
   const { user } = useAuth();
   // Removed references to level and xp as they are not in the gamification hook
+  // Removed references to level and xp as they are not in the gamification hook
   const level = 1;
   const xp = 0;
   const [exporting, setExporting] = useState(false);
