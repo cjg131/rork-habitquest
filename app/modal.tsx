@@ -6,8 +6,8 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useHabits } from '@/hooks/use-habits-store';
 import { useTasks } from '@/hooks/use-tasks-store';
 import { useAppSettings } from '@/hooks/use-app-settings';
-import ExportManager from '@/components/data/ExportManager';
-import ImportManager from '@/components/data/ImportManager';
+import { ExportManager } from '@/components/data/ExportManager';
+import { ImportManager } from '@/components/data/ImportManager';
 import IntegrationManager from '@/components/integrations/IntegrationManager';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
@@ -69,6 +69,22 @@ export default function ModalScreen() {
         }
       }
     }
+
+    if (!isEditing && type === 'task') {
+      const dueParam = params.dueDate as string | undefined;
+      if (dueParam) {
+        try {
+          const parsed = new Date(dueParam);
+          if (!Number.isNaN(parsed.getTime())) {
+            setDueDate(parsed);
+            setDueDateText(parsed.toISOString().split('T')[0]);
+            console.log('[Modal] Pre-filled due date from param:', parsed.toISOString());
+          }
+        } catch (e) {
+          console.error('[Modal] Failed to parse dueDate param:', e);
+        }
+      }
+    }
     
     // Load pomodoro settings
     if (type === 'pomodoro-settings') {
@@ -77,7 +93,7 @@ export default function ModalScreen() {
       setLongBreakDuration(settings.pomodoroSettings.longBreakDuration.toString());
       setLongBreakInterval(settings.pomodoroSettings.longBreakInterval.toString());
     }
-  }, [isEditing, type, id, habits, tasks, settings]);
+  }, [isEditing, type, id, habits, tasks, settings, params.dueDate]);
   
   const handleSave = () => {
     if (type === 'pomodoro-settings') {
@@ -486,8 +502,54 @@ export default function ModalScreen() {
               </View>
               
               <TouchableOpacity
+                testID="due-date-picker-button"
                 style={[styles.datePickerButton, { borderColor: colors.border, backgroundColor: colors.card }]}
-                onPress={() => setShowDatePicker(true)}
+                onPress={() => {
+                  if (Platform.OS === 'web') {
+                    try {
+                      console.log('[Modal] Opening web date picker');
+                      const doc: any = (globalThis as any).document;
+                      if (!doc) {
+                        console.warn('[Modal] document not available');
+                        setShowDatePicker(true);
+                        return;
+                      }
+                      const input: any = doc.createElement('input');
+                      input.type = 'date';
+                      input.min = new Date().toISOString().split('T')[0];
+                      if (dueDate) {
+                        input.value = dueDate.toISOString().split('T')[0];
+                      }
+                      input.onchange = () => {
+                        try {
+                          const value = input.value;
+                          if (value) {
+                            const [y, m, d] = value.split('-').map((v: string) => parseInt(v, 10));
+                            const picked = new Date(y, (m ?? 1) - 1, d ?? 1);
+                            setDueDate(picked);
+                            setDueDateText(picked.toISOString().split('T')[0]);
+                            console.log('[Modal] Web date picked:', picked.toISOString());
+                          }
+                        } catch (err) {
+                          console.error('[Modal] Failed parsing web date:', err);
+                        } finally {
+                          doc.body.removeChild(input);
+                        }
+                      };
+                      input.style.position = 'fixed';
+                      input.style.opacity = '0';
+                      input.style.pointerEvents = 'none';
+                      doc.body.appendChild(input);
+                      (input as any).showPicker?.();
+                      input.click();
+                    } catch (e) {
+                      console.error('[Modal] Web date picker error:', e);
+                      setShowDatePicker(true);
+                    }
+                  } else {
+                    setShowDatePicker(true);
+                  }
+                }}
               >
                 <Calendar size={20} color={colors.text.secondary} style={styles.dateIcon} />
                 <View style={styles.dateContent}>
@@ -509,7 +571,7 @@ export default function ModalScreen() {
                 )}
               </TouchableOpacity>
               
-              {showDatePicker && (
+              {showDatePicker && Platform.OS !== 'web' && (
                 <DateTimePicker
                   value={dueDate || new Date()}
                   mode="date"
