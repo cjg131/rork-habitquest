@@ -540,8 +540,14 @@ export default function ModalScreen() {
                       input.style.opacity = '0';
                       input.style.pointerEvents = 'none';
                       doc.body.appendChild(input);
-                      (input as any).showPicker?.();
-                      input.click();
+                      // Avoid showPicker on web if inside cross-origin iframe
+                      // Some browsers throw SecurityError when calling showPicker()
+                      try {
+                        input.click();
+                      } catch (clickErr) {
+                        console.warn('[Modal] input.click() failed, falling back UI', clickErr);
+                        setShowDatePicker(true);
+                      }
                     } catch (e) {
                       console.error('[Modal] Web date picker error:', e);
                       setShowDatePicker(true);
@@ -586,6 +592,67 @@ export default function ModalScreen() {
                   minimumDate={new Date()}
                 />
               )}
+
+              {showDatePicker && Platform.OS === 'web' && (
+                <View
+                  style={{
+                    marginTop: 8,
+                    borderWidth: 1,
+                    borderColor: colors.border,
+                    borderRadius: 12,
+                    backgroundColor: colors.card,
+                    maxHeight: 320,
+                    overflow: 'hidden',
+                  }}
+                  testID="web-date-picker-fallback"
+                >
+                  <View style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    paddingHorizontal: 12,
+                    paddingVertical: 10,
+                    borderBottomWidth: 1,
+                    borderBottomColor: colors.border,
+                  }}>
+                    <Text style={{ fontWeight: '600', color: colors.text.primary }}>Select a date</Text>
+                    <TouchableOpacity onPress={() => setShowDatePicker(false)} testID="close-web-date-picker">
+                      <X size={18} color={colors.text.secondary} />
+                    </TouchableOpacity>
+                  </View>
+                  <ScrollView style={{ maxHeight: 280 }}>
+                    {Array.from({ length: 365 }).map((_, i) => {
+                      const d = new Date();
+                      d.setDate(d.getDate() + i);
+                      const iso = d.toISOString().split('T')[0];
+                      return (
+                        <TouchableOpacity
+                          key={iso}
+                          onPress={() => {
+                            console.log('[Modal] Web fallback date picked:', iso);
+                            setDueDate(d);
+                            setDueDateText(iso);
+                            setShowDatePicker(false);
+                          }}
+                          style={{
+                            paddingHorizontal: 12,
+                            paddingVertical: 12,
+                            borderBottomWidth: 1,
+                            borderBottomColor: colors.border,
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                          }}
+                          testID={`web-date-option-${iso}`}
+                        >
+                          <Text style={{ color: colors.text.primary }}>{d.toLocaleDateString()}</Text>
+                          {dueDateText === iso && <Text style={{ color: colors.primary }}>Selected</Text>}
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </ScrollView>
+                </View>
+              )
             </>
           )}
           
